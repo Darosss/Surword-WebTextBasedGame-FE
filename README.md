@@ -1,6 +1,6 @@
 # Surword - Web Text Based Game | Frontend
 
-This Spring Boot repository serves as the backbone for a text-based RPG game, providing the necessary structure and functionality to support player progression, rng combat mechanics, and game state management.
+This repository serves as the client(FE) for a Surowrd - text-based game
 
 _Note: This project is still in development, and as such, many features are subject to significant changes and refinements. Please be aware that the current state of the project may not reflect its final form, and functionalities described here are subject to adjustments and enhancements._
 

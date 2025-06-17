@@ -6,7 +6,7 @@ import { ApiDataNotNullable, COOKIE_TOKEN_NAME } from "@/api/fetch";
 import { User } from "@/api/types";
 import { UseFetchReturnType, useFetch } from "@/hooks/useFetch";
 
-type HeroDetailsType = {
+export type HeroDetailsType = {
   health: number;
   maxHealth: number;
   level: number;
@@ -16,7 +16,7 @@ type HeroDetailsType = {
 
 type ProfileResponseType = {
   user: User;
-  heroDetails: HeroDetailsType;
+  heroDetails: HeroDetailsType | null;
 };
 type ApiUser = ApiDataNotNullable<ProfileResponseType>;
 

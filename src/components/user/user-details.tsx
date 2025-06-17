@@ -1,7 +1,8 @@
 import { FC } from "react";
 import styles from "./user-details.module.scss";
 import { useAuthContext } from "@/components/auth";
-import { ProgressBar } from "@/components/common";
+import { HeroDetails } from "./hero-details";
+
 export const UserDetails: FC = () => {
   const {
     apiUser: { api },
@@ -9,7 +10,7 @@ export const UserDetails: FC = () => {
 
   const {
     user: { username, gold },
-    heroDetails: { health, maxHealth, experience, neededExp, level },
+    heroDetails,
   } = api.data;
 
   if (!username) return null;
@@ -22,33 +23,8 @@ export const UserDetails: FC = () => {
       <div>
         Gold: <span>{gold}</span>
       </div>
-      <div>
-        Health:
-        <span>
-          <ProgressBar
-            value={health}
-            maxValue={maxHealth}
-            valueName="Health"
-            maxValueName="Max health"
-            showPercents={true}
-          />
-        </span>
-      </div>
-      <div>
-        Level: <span>{level}</span>
-      </div>
-      <div>
-        Experience:
-        <span>
-          <ProgressBar
-            value={experience}
-            maxValue={neededExp}
-            valueName="Experience"
-            maxValueName="Needed exp"
-            showPercents={true}
-          />
-        </span>
-      </div>
+
+      {heroDetails ? <HeroDetails details={heroDetails} /> : null}
     </div>
   );
 };

@@ -10,7 +10,7 @@ type ItemDisplayProps = {
   item: InventoryItemType;
   tooltipId: string;
   onHover: (item: InventoryItemType) => void;
-  refForWrapper?: React.LegacyRef<HTMLDivElement> | undefined;
+  refForWrapper?: React.Ref<HTMLDivElement> | undefined;
   opacity?: number;
   costOptions?: {
     value: number;

@@ -36,7 +36,7 @@ export type MercenaryItemFieldProps = {
   onHover: (item: InventoryItemType) => void;
   tooltipId: string;
   itemDisplayOpacity?: number;
-  itemDisplayRefWrapper?: React.LegacyRef<HTMLDivElement> | undefined;
+  itemDisplayRefWrapper?: React.Ref<HTMLDivElement> | undefined;
 };
 
 export const MercenaryItemField: FC<MercenaryItemFieldProps> = ({

@@ -3,7 +3,7 @@ import {
   EquipResponseType,
   InventoryItemType,
 } from "@/api/types";
-import { FC, LegacyRef, useMemo, useState } from "react";
+import { FC, Ref, useMemo, useState } from "react";
 import styles from "./inventory-items.module.scss";
 import { CharacterEquipmentFields } from "@/api/enums";
 import {
@@ -25,7 +25,7 @@ type InventoryItemsProps = {
   items?: InventoryItemsType;
   tooltipId: string;
   //TODO: move this to conetxt probably;
-  dropRef: LegacyRef<HTMLDivElement>;
+  dropRef: Ref<HTMLDivElement>;
   className?: string;
 };
 

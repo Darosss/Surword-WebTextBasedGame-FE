@@ -5,7 +5,7 @@ import { FC, FormEvent } from "react";
 import { COOKIE_TOKEN_NAME, fetchBackendApi } from "@/api/fetch";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/components/auth";
-import { Button } from "../components/ui/button";
+import { Button } from "@/components/ui/button";
 
 type LoginResponse = {
   email: string;

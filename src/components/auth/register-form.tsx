@@ -5,7 +5,7 @@ import { fetchBackendApi } from "@/api/fetch";
 import { useRouter } from "next/navigation";
 
 import { User } from "@/api/types";
-import { Button } from "../components/ui/button";
+import { Button } from "@/components/ui/button";
 
 type LoginResponse = User;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useFetch } from "@/hooks/useFetch";
-import { Button } from "@/components/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { FC, useEffect } from "react";
 import { useCharacterManagementContext } from "@/components/characters";
 

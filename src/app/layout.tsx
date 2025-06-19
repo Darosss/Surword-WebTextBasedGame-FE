@@ -24,9 +24,8 @@ export default function RootLayout({
         className={`${inter.className} text-gray-100 min-h-screen relative`}
       >
         <div className="bg-gradient-to-br from-blue-900 via-black to-gray-900 absolute top-0 right-0 bottom-0 left-0"></div>
-        <div>
-          <LayoutContent>{children}</LayoutContent>
-        </div>
+
+        <LayoutContent>{children}</LayoutContent>
       </body>
     </html>
   );

@@ -1,24 +1,26 @@
 "use client";
-import Navigation from "@/components/navigation";
 import { AuthContextProvider } from "@/components/auth";
 import { ToastContainer } from "react-toastify";
-import styles from "./layout.module.scss";
-import { FC, ReactNode } from "react";
-import { UserDetails } from "@/components/user";
+import { FC, ReactNode, useState } from "react";
+import { Sidebar } from "@/components/navigation/sidebar";
+import { MobileHeader } from "@/components/navigation/mobile-header";
 
 type LayoutContentProps = {
   children: ReactNode;
 };
 
 export const LayoutContent: FC<LayoutContentProps> = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
-    <AuthContextProvider>
-      <Navigation />
-      <div className={styles.userDetailsWrapper}>
-        <UserDetails />
-      </div>
-      <ToastContainer />
-      <div className={styles.contentWrapper}>{children}</div>
-    </AuthContextProvider>
+    <div className="flex z-[100]">
+      <AuthContextProvider>
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <MobileHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+        <ToastContainer />
+        <div className="flex grow md:ml-[20dvw] ml-0 z-[100] pb-1 pr-1">
+          {children}
+        </div>
+      </AuthContextProvider>
+    </div>
   );
 };

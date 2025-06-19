@@ -1,8 +1,7 @@
 "use client";
 
 import { useFetch } from "@/hooks/useFetch";
-import styles from "./character-creator.module.scss";
-import { Button } from "@/components/common";
+import { Button } from "@/components/components/ui/button";
 import { FC, useEffect } from "react";
 import { useCharacterManagementContext } from "@/components/characters";
 
@@ -12,7 +11,6 @@ here i need to add later:
 - character sex
 etc, itp
 for now it's just create button 
-
 */
 
 export const CharacterCreator: FC = () => {
@@ -34,11 +32,17 @@ export const CharacterCreator: FC = () => {
   }, [responseData.data, fetchCharacterData]);
 
   return (
-    <div className={styles.characterCreatorWrapper}>
-      <h1>Char creator</h1>
+    <div className="flex flex-col grow items-center">
+      <h1 className="text-3xl">Character creator</h1>
 
       <div>
-        <Button onClick={fetchData}>Create main character</Button>
+        <Button
+          variant="default"
+          className="bg-warning"
+          onClick={() => fetchData()}
+        >
+          Create main character
+        </Button>
       </div>
     </div>
   );

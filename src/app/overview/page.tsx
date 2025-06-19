@@ -1,6 +1,5 @@
 "use client";
 
-import styles from "./overview.module.scss";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import {
@@ -11,7 +10,7 @@ import { InventoryManagementContextProvider } from "@/components/characters/inve
 
 export default function Overview() {
   return (
-    <main className={styles.overview}>
+    <main>
       <DndProvider backend={HTML5Backend}>
         <InventoryManagementContextProvider>
           <CharacterManagementContextProvider>

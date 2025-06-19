@@ -4,6 +4,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --header-size: 20dvw;
+  --content-size: 80dvw;
+
   /* **** COLORS **** */
   --primary-first-rgb: 3, 105, 161;
   --primary-second-rgb: 8, 47, 73;
@@ -163,12 +166,6 @@
   }
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
 html,
 body {
   overflow: hidden;
@@ -176,8 +173,7 @@ body {
 
 main {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-grow: 1;
 }
 
 body {
@@ -296,5 +292,90 @@ a {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .header-size {
+    width: var(--header-size);
+    min-width: var(--header-size);
+    max-width: var(--header-size);
+  }
+
+  .content-margin {
+    margin-left: 20dvw;
+  }
+
+  .content-margin-mobile {
+    margin-left: 0;
+  }
+
+  .content-size {
+    width: var(--content-size);
+    min-width: var(--content-size);
+    max-width: var(--content-size);
+  }
+
+  /* Background colors */
+  .bg-primary {
+    @apply bg-blue-900;
+  }
+  .bg-secondary {
+    @apply bg-gray-800;
+  }
+  .bg-info {
+    @apply bg-gray-950;
+  }
+  .bg-muted {
+    @apply bg-gray-600;
+  }
+  .bg-warning {
+    @apply bg-yellow-700;
+  }
+  .bg-danger {
+    @apply bg-red-900;
+  }
+  .bg-accent {
+    @apply bg-yellow-500;
+  }
+
+  /* Text colors */
+  .text-primary {
+    @apply text-blue-300;
+  }
+  .text-secondary {
+    @apply text-gray-400;
+  }
+  .text-info {
+    @apply text-gray-100;
+  }
+  .text-muted {
+    @apply text-gray-400;
+  }
+  .text-warning {
+    @apply text-yellow-400;
+  }
+  .text-danger {
+    @apply text-red-400;
+  }
+  .text-accent {
+    @apply text-yellow-300;
+  }
+
+  .from-primary {
+    @apply from-blue-900;
+  }
+  .via-info {
+    @apply via-gray-900;
+  }
+  .to-secondary {
+    @apply to-gray-800;
+  }
+
+  .from-warning {
+    @apply from-yellow-700;
+  }
+  .to-accent {
+    @apply to-yellow-400;
   }
 }

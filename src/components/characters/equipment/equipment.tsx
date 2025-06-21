@@ -49,8 +49,9 @@ export const Equipment: FC = () => {
           <div
             key={eqField}
             className={cn(
-              "relative max-w-3/4 aspect-square rounded-lg bg-black/40 border-2 border-dashed border-gray-600 flex flex-col items-center justify-center text-center text-xs text-gray-400 hover:bg-gray-700/50 hover:border-gray-500 transition-all",
-              "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              "relative max-w-3/4 aspect-square rounded-lg bg-black/40 border-2 border-gray-600 flex flex-col items-center justify-center text-center text-xs text-gray-400 hover:bg-gray-700/50 hover:border-gray-500 transition-all",
+              "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+              currentSlot ? "border-0" : "border-dashed"
             )}
             style={{ gridArea: eqField.toLowerCase() }}
           >

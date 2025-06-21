@@ -358,6 +358,9 @@ a {
   .bg-secondary {
     @apply bg-gray-800;
   }
+  .bg-success {
+    @apply bg-green-800;
+  }
   .bg-info {
     @apply bg-gray-950;
   }
@@ -381,6 +384,10 @@ a {
   .text-secondary {
     @apply text-gray-400;
   }
+  .text-success {
+    @apply text-green-400;
+  }
+
   .text-info {
     @apply text-gray-100;
   }

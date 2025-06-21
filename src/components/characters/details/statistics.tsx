@@ -1,13 +1,19 @@
+"use client";
 import {
   CharacterTypesAlias,
   HeroAdditionalStatistics,
+  HeroAdditionalStatisticsValues,
   HeroBaseStatistics,
+  HeroBaseStatisticsValues,
 } from "@/api/types";
-import styles from "./statistics.module.scss";
 import { FC, useState } from "react";
-import { Button } from "@/components/common";
+import { Button } from "@/components/ui/button";
 import { fetchBackendApi } from "@/api/fetch";
 import { isMercenaryCharacter } from "@/api/utils";
+import { Progress } from "@/components/ui/progress";
+import { CheckCircle, PlusCircle } from "lucide-react";
+import { StatRow } from "./stat-row";
+import { CharacterAvatar } from "../characters/character-avatar";
 
 type BaseStatisticsProps = {
   statistics: HeroBaseStatistics;
@@ -20,26 +26,44 @@ export const BaseStatistics: FC<BaseStatisticsProps> = ({
   statistics,
   canTrain,
 }) => {
+  const Tooltip = ({
+    statValues,
+  }: {
+    statValues: HeroBaseStatisticsValues;
+  }) => {
+    return Object.keys(statValues).map((key) => {
+      return (
+        <div
+          key={key}
+          className={
+            "w-full flex items-center justify-between py-2.5 border-b border-gray-700/100 last:border-b-0"
+          }
+        >
+          <div className="flex items-center gap-1.5">
+            <span className="text-gray-300 text-sm">{key}</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="font-semibold text-white text-sm">
+              {statValues[key as keyof typeof statValues]}
+            </span>
+          </div>
+        </div>
+      );
+    });
+  };
   return (
-    <div className={styles.characterStatistics}>
+    <div>
       <div>Statistics</div>
       {Object.entries(statistics)
         .sort()
         .map(([statName, value]) => (
-          <div key={statName} className={styles.statisticsVisibleDetails}>
-            <div>{value.name}</div>
-            <div className={styles.statisticValueWrapper}>
-              <div> {value.effectiveValue}</div>
-              {canTrain ? (
-                <div className={styles.statisticTrainWrapper}>
-                  <TrainBaseStatisticButton
-                    statisticName={statName}
-                    onSuccessTrain={canTrain.onSuccesTrain}
-                  />
-                </div>
-              ) : null}
-            </div>
-          </div>
+          <StatRow
+            key={statName}
+            label={statName}
+            value={value.effectiveValue}
+            tooltip={<Tooltip statValues={value} />}
+            isTrainable={!!canTrain}
+          />
         ))}
     </div>
   );
@@ -50,7 +74,7 @@ type TrainBaseStatisticButtonProps = {
   onSuccessTrain: () => void;
 };
 
-const TrainBaseStatisticButton = ({
+export const TrainBaseStatisticButton = ({
   statisticName,
   onSuccessTrain,
 }: TrainBaseStatisticButtonProps) => {
@@ -59,9 +83,10 @@ const TrainBaseStatisticButton = ({
     <>
       {statAddValue > 0 ? (
         <Button
+          className="h-4 w-4 text-green-400 hover:bg-green-900/50 p-0"
           onClick={() => {
             fetchBackendApi<boolean>({
-              url: `characters/train-statistic/${statisticName}/${statAddValue}`,
+              url: `characters/train-statistic/${statisticName.toUpperCase()}/${statAddValue}`,
               method: "PATCH",
               notification: { pendingText: `Trying to train ${statisticName}` },
             }).then((response) => {
@@ -72,15 +97,16 @@ const TrainBaseStatisticButton = ({
             });
           }}
         >
-          Train
+          <CheckCircle className="h-4 w-4" />
         </Button>
       ) : null}
       <Button
+        className="h-4 w-16 text-green-400 hover:brightness-105 p-0"
         onClick={() => {
           setStatAddValue((prevState) => prevState + 1);
         }}
       >
-        + {statAddValue}
+        <PlusCircle className="h-4 w-4" /> {statAddValue}
       </Button>
     </>
   );
@@ -88,27 +114,49 @@ const TrainBaseStatisticButton = ({
 
 type AdditionalStatisticsProps = {
   statistics: HeroAdditionalStatistics;
-  additionalClassName?: string;
 };
 
 export const AdditionalStatistics: FC<AdditionalStatisticsProps> = ({
   statistics,
-  additionalClassName,
 }) => {
+  const Tooltip = ({
+    statValues,
+  }: {
+    statValues: HeroAdditionalStatisticsValues;
+  }) => {
+    return Object.keys(statValues).map((key) => {
+      return (
+        <div
+          key={key}
+          className={
+            "w-full flex items-center justify-between py-2.5 border-b border-gray-700/100 last:border-b-0"
+          }
+        >
+          <div className="flex items-center gap-1.5">
+            <span className="text-gray-300 text-sm">{key}</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="font-semibold text-white text-sm">
+              {statValues[key as keyof typeof statValues]}
+            </span>
+          </div>
+        </div>
+      );
+    });
+  };
+
   return (
-    <div
-      className={`${styles.characterAdditionalStatistics} ${
-        additionalClassName ?? ""
-      }`}
-    >
-      <div> Additional</div>
+    <div>
       {Object.entries(statistics)
         .sort()
         .map(([statName, value]) => (
-          <div key={statName} className={styles.statisticsVisibleDetails}>
-            <div>{value.name}</div>
-            <div>{value.effectiveValue}</div>
-          </div>
+          <StatRow
+            key={statName}
+            label={statName}
+            value={value.effectiveValue}
+            tooltip={<Tooltip statValues={value} />}
+            isTrainable={false}
+          />
         ))}
     </div>
   );
@@ -122,28 +170,44 @@ type BaseDetailsProps = {
 export const BaseDetails: FC<BaseDetailsProps> = ({ character }) => {
   const { name, level, health } = character;
   const isMercenary = isMercenaryCharacter(character);
+
+  const maxHealth = character.stats.additionalStatistics["MAX_HEALTH"].value;
+  const hpPercentage = character ? (character.health / maxHealth) * 100 : 0;
+  const xpPercentage = !isMercenaryCharacter(character)
+    ? (character.health / character.expToLevelUp) * 100
+    : 0;
+
   return (
-    <div className={styles.baseDetails}>
-      <div>
-        <div>Name</div>
-        <div> {name}</div>
+    <div className="mb-4">
+      <div className="aspect-square relative flex items-center justify-center p-2 bg-black/20 rounded-md">
+        <CharacterAvatar />
       </div>
-      <div>
-        <div>Level </div>
-        <div>{level}</div>
+      <div className="flex items-baseline justify-between">
+        <h3 className="text-xl font-semibold text-yellow-200">{name}</h3>
+        <p className="text-md text-gray-400">Level {level}</p>
       </div>
-      <div>
-        <div>Health points</div>
-        <div>{health}</div>
-      </div>
-      {!isMercenary ? (
+      <div className="space-y-1.5 mt-2">
         <div>
-          <div>Experience </div>
-          <div>
-            {character.experience} / {character.expToLevelUp}
+          <div className="flex justify-between text-xs mb-0.5">
+            <span className="font-medium text-red-400">HP</span>
+            <span className="text-gray-400">
+              {health || 1}/{maxHealth}
+            </span>{" "}
           </div>
+          <Progress value={hpPercentage} className="h-2 [&>*]:bg-red-500" />
         </div>
-      ) : null}
+        {!isMercenary ? (
+          <div>
+            <div className="flex justify-between text-xs mb-0.5">
+              <span className="font-medium text-green-400">XP</span>
+              <span className="text-gray-400">
+                {character.experience}/ {character.expToLevelUp}
+              </span>
+            </div>
+            <Progress value={xpPercentage} className="h-2 [&>*]:bg-green-500" />
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };

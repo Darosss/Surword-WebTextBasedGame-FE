@@ -1,8 +1,9 @@
-import { Button } from "@/components/common";
+import { Button } from "@/components/ui/button";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 import { formatTime } from "@/utils/utils";
 import { useMerchantContext } from "./merchant-context";
 import { FC, useEffect } from "react";
+import { RefreshCwIcon } from "lucide-react";
 
 type MerchantCommodityTimerProps = {
   commodityRefreshAt: string;
@@ -26,11 +27,13 @@ export const MerchantCommodityTimer: FC<MerchantCommodityTimerProps> = ({
   }, [fetchData, commodityRemainingTime]);
 
   return (
-    <>
+    <div className="w-full flex justify-between items-center">
       <div>{formatTime(commodityRemainingTime)}</div>
       <div>
-        <Button defaultButtonType="info">Refresh (soon)</Button>
+        <Button variant="outline" disabled>
+          <RefreshCwIcon />
+        </Button>
       </div>
-    </>
+    </div>
   );
 };

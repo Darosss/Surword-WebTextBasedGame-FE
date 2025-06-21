@@ -20,6 +20,7 @@ import {
 } from "@/components/items";
 import { useAuthContext } from "@/components/auth";
 import { useInventoryManagementContext } from ".";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type InventoryItemsProps = {
   items?: InventoryItemsType;
@@ -108,33 +109,37 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
     });
   };
   return (
-    <div
-      className={`${styles.itemsWrapper} ${className ? className : ""}`}
-      ref={dropRef}
-    >
-      <ItemTooltipContentWrapper
-        customClassName={styles.inventoryTooltip}
-        item={currentItem}
-        tooltipId={tooltipId}
-      />
-      {itemsToRender.map((val) => (
-        <div key={val[0]} className={styles.oneItemWrapper}>
-          <InventoryItem
-            key={val[0]}
-            inventoryItem={val}
-            tooltipId={tooltipId}
-            onHover={(item) => setCurrentItem(item)}
-            onItemEquip={(characterId, itemId, slot) =>
-              handleOnItemEquip(characterId, itemId, slot)
-            }
-            onItemConsume={(itemId) => handleOnItemConusme(itemId)}
-            onMercenaryWear={(characterId, itemId) =>
-              handleOnMercenaryWear(characterId, itemId)
-            }
-            onItemSell={handleOnSellItem}
-          />
-        </div>
-      ))}
-    </div>
+    <ScrollArea className="flex-grow">
+      <div
+        className={`grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-6 md:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5 gap-2 pr-2 ${
+          className ? className : ""
+        } `}
+        ref={dropRef}
+      >
+        <ItemTooltipContentWrapper
+          customClassName={styles.inventoryTooltip}
+          item={currentItem}
+          tooltipId={tooltipId}
+        />
+        {itemsToRender.map((val) => (
+          <div key={val[0]} className={styles.oneItemWrapper}>
+            <InventoryItem
+              key={val[0]}
+              inventoryItem={val}
+              tooltipId={tooltipId}
+              onHover={(item) => setCurrentItem(item)}
+              onItemEquip={(characterId, itemId, slot) =>
+                handleOnItemEquip(characterId, itemId, slot)
+              }
+              onItemConsume={(itemId) => handleOnItemConusme(itemId)}
+              onMercenaryWear={(characterId, itemId) =>
+                handleOnMercenaryWear(characterId, itemId)
+              }
+              onItemSell={handleOnSellItem}
+            />
+          </div>
+        ))}
+      </div>
+    </ScrollArea>
   );
 };

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import styles from "./equipment.module.scss";
 import { InventoryItemType } from "@/api/types";

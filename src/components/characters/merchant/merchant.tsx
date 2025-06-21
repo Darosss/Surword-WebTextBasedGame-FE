@@ -4,7 +4,6 @@ import { InventoryItemType, ItemsCostType } from "@/api/types";
 import React, { FC, useMemo, useState } from "react";
 import styles from "./merchant.module.scss";
 import {
-  ItemsContainer,
   ItemTooltipContentWrapper,
   filterItemsEntries,
   getSortedItems,
@@ -27,6 +26,10 @@ import { PossibleDropResultActions } from "../equipment";
 import { MerchantCommodityTimer } from "./merchant-commodity-timer";
 import { FetchingInfo } from "@/components/common";
 import { useInventoryManagementContext } from "../inventory";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Coins } from "lucide-react";
+import { ItemsHeaderFilter } from "@/components/items/items-header-filter";
+import { ItemsSidebarFilter } from "@/components/items/items-sidebar-filter";
 
 const TOOLTIP_ID = "merchant-item-tooltip";
 
@@ -120,28 +123,36 @@ export const Merchant: FC = () => {
 
   const isActive = canDrop && isOver;
   return (
-    <div className={styles.merchantWrapper}>
-      <div className={styles.merchantCommodityInfo}>
+    <div className="space-y-4 flex flex-col max-h-[calc(100dvh-10rem)] overflow-hidden">
+      <div className="flex justify-between items-center border-b border-gray-600 pb-3">
+        <h3 className="text-xl font-semibold text-yellow-200">
+          Traveling Merchant
+        </h3>
+        <div className="flex items-center gap-2 text-yellow-400">
+          <Coins className="h-5 w-5" />
+          <span>Your Gold: {userData.user.gold.toLocaleString()}</span>{" "}
+          {/* Placeholder, get from auth context */}
+        </div>
+      </div>
+      <div className="flex items-center gap-2 text-yellow-400">
         <MerchantCommodityTimer
           commodityRefreshAt={responseData.data.commodityRefreshAt}
         />
       </div>
-      <ItemsContainer
-        filter={filter}
-        setFilter={setFilter}
-        sort={sort}
-        setSort={setSort}
-      >
-        <ItemTooltipContentWrapper
-          customClassName={styles.inventoryTooltip}
-          item={currentItem}
-          tooltipId={TOOLTIP_ID}
-        />
+      <ItemsHeaderFilter setFilter={setFilter} sort={sort} setSort={setSort} />
+      <ItemsSidebarFilter setFilter={setFilter} filter={filter} />
+      <ItemTooltipContentWrapper
+        customClassName={styles.inventoryTooltip}
+        item={currentItem}
+        tooltipId={TOOLTIP_ID}
+      />
 
+      <ScrollArea className="flex-grow">
+        <ScrollBar />
         <div
-          className={`${styles.merchantItemsWrapper}
-              ${isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""}
-        `}
+          className={`max-h-[calc(100dvh-10rem)] grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 pr-2
+               ${isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""}
+         `}
           ref={drop}
         >
           {itemsToRender?.map((value) => {
@@ -150,6 +161,7 @@ export const Merchant: FC = () => {
                 responseData.data?.itemsCost || {},
                 value[0]
               )?.[1] || -1;
+
             return (
               <MerchantItem
                 key={value[0]}
@@ -157,11 +169,12 @@ export const Merchant: FC = () => {
                 tooltipId={TOOLTIP_ID}
                 onHover={setCurrentItem}
                 onItemBuy={handleOnBuyItem}
+                currentGold={userData.user.gold}
               />
             );
           })}
         </div>
-      </ItemsContainer>
+      </ScrollArea>
     </div>
   );
 };

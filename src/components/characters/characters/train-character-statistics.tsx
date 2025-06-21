@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { AdditionalStatistics, BaseStatistics } from "../details/statistics";
 import { useCharacterManagementContext } from "./character-management-context";
-import styles from "./train-character-statistics.module.scss";
 import { isMercenaryCharacter } from "@/api/utils";
 
 type TrainCharacterStatisticsProps = {};
@@ -15,7 +14,7 @@ export const TrainCharacterStatistics: FC<
   } = useCharacterManagementContext();
 
   return (
-    <div className={styles.trainCharacterStatisticsWrapper}>
+    <div>
       <BaseStatistics
         statistics={data.stats.statistics}
         {...(!isMercenaryCharacter(data)

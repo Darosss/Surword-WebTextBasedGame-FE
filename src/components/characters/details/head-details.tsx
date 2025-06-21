@@ -17,10 +17,7 @@ export const HeadDetails: FC<HeadDetailsProps> = ({ stats, asDefender }) => {
       <div className={styles.characterAvatar}>
         <Image src="/images/hero-placeholder.png" alt="hero img" fill />
         <div className={`${styles.characterAdditionalStatisticsWrapper}`}>
-          <AdditionalStatistics
-            statistics={stats.additionalStatistics}
-            additionalClassName={styles.additionalStatistics}
-          />
+          <AdditionalStatistics statistics={stats.additionalStatistics} />
         </div>
       </div>
       <BaseStatistics statistics={stats.statistics} />

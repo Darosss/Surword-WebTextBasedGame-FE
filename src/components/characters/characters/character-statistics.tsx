@@ -5,7 +5,6 @@ import {
   BaseStatistics,
 } from "../details/statistics";
 import { useCharacterManagementContext } from "./character-management-context";
-import styles from "./character-statistics.module.scss";
 
 type CharacterStatisticsProps = {};
 
@@ -15,8 +14,8 @@ export const CharacterStatistics: FC<CharacterStatisticsProps> = ({}) => {
   } = useCharacterManagementContext();
 
   return (
-    <div className={styles.characterStatistics}>
-      <div className={styles.baseDetails}>
+    <div>
+      <div>
         <BaseDetails character={data} />
       </div>
       <BaseStatistics statistics={data.stats.statistics} />

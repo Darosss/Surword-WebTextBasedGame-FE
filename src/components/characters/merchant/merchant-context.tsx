@@ -1,3 +1,4 @@
+"use client";
 import { FC, createContext, useContext } from "react";
 import { UseFetchReturnType, useFetch } from "@/hooks/useFetch";
 import { YourMerchantResponseData } from "@/api/types";

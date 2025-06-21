@@ -1,11 +1,16 @@
 "use client";
 
-import { ItemStatisticStatsList, InventoryItemType } from "@/api/types";
-import styles from "./item-display.module.scss";
+import {
+  ItemStatisticStatsList,
+  InventoryItemType,
+  ItemRarity,
+} from "@/api/types";
 import Image from "next/image";
 import React, { FC } from "react";
 import { Tooltip } from "react-tooltip";
 import { isConsumableItem, isWearableItem } from "@/api/utils";
+import styles from "./item-display.module.scss";
+import { cn } from "@/lib/utils";
 type ItemDisplayProps = {
   item: InventoryItemType;
   tooltipId: string;
@@ -17,7 +22,15 @@ type ItemDisplayProps = {
     canAfford: boolean;
   };
 };
-
+const rarityStyles: Record<ItemRarity, string> = {
+  COMMON: "border-gray-400 bg-gray-700/30",
+  UNCOMMON: "border-green-500 bg-green-400/30",
+  RARE: "border-blue-500 bg-blue-600/30",
+  VERY_RARE: "border-purple-500 bg-sky-400/30",
+  EPIC: "border-orange-500 bg-purple-400/30",
+  LEGENDARY: "border-orange-500 bg-orange-500/30",
+  MYTHIC: "border-orange-500 bg-yellow-600/30",
+};
 export const ItemDisplay: FC<ItemDisplayProps> = ({
   item,
   tooltipId,
@@ -29,29 +42,39 @@ export const ItemDisplay: FC<ItemDisplayProps> = ({
   return (
     <div
       data-tooltip-id={tooltipId}
-      className={styles.itemDisplayWrapper}
+      className={cn(
+        "group relative aspect-square w-full rounded-lg border-2 flex flex-col items-center justify-center transition-all scale-95 hover:scale-100 hover:shadow-lg",
+        rarityStyles[item.rarity]
+      )}
       onMouseEnter={() => onHover(item)}
       ref={refForWrapper}
       style={{ opacity }}
     >
       <div
-        className={`${styles.levelDisplay} ${
-          styles[item.rarity.toLowerCase()]
-        }`}
+        className={cn(
+          "absolute flex justify-between rounded-sm p-1 top-1 right-1 z-[50] brightness-150 text-xs",
+          rarityStyles[item.rarity]
+        )}
       >
         {item.level}
       </div>
       {costOptions ? (
-        <div className={styles.costDisplay}>
+        <div
+          className={cn(
+            "absolute flex justify-between rounded-sm p-1 bottom-1 right-1 z-[50] text-xs",
+            rarityStyles[item.rarity]
+          )}
+        >
           <span
-            className={`${!costOptions.canAfford ? styles.cantAfford : ""}`}
+            className={cn(
+              !costOptions.canAfford ? "text-danger" : "text-primary"
+            )}
           >
             {costOptions.value.toLocaleString()}
           </span>
           <span className={styles.goldIcon}>$</span>
         </div>
       ) : null}
-      <div className={styles.itemDisplayBackground}></div>
       <Image
         src={`/images/items/${item.type.toLowerCase()}/${item.subtype.toLowerCase()}.png`}
         sizes="(max-width: 768px) 50px, 100px"

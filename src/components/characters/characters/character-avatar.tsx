@@ -10,6 +10,7 @@ import {
 } from "../dndTypes";
 import { PossibleDropResultActions } from "../equipment";
 import { FC } from "react";
+import { cn } from "@/lib/utils";
 
 export const CharacterAvatar: FC = () => {
   const {
@@ -37,14 +38,14 @@ export const CharacterAvatar: FC = () => {
   const isActive = canDrop && isOver;
   return (
     <Image
-      className={`${
-        isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""
-      }`}
-      ref={drop}
       src="/images/hero-placeholder.png"
-      alt="hero img"
-      sizes="(max-width: 768px) 33vw, (max-width: 1200px) 40vw, 50vw"
+      alt="Character Avatar"
       fill
+      ref={drop}
+      className={cn(
+        "max-w-full h-auto rounded-md object-contain",
+        isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""
+      )}
     />
   );
 };

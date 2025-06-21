@@ -5,21 +5,21 @@ import { InventoryItems } from "./inventory-items";
 import { DropTargetMonitor, useDrop } from "react-dnd";
 import { ItemType } from "@/api/enums";
 import { allowDropToPrefixes } from "../dndHelpers";
-import { Inventory as InventoryType } from "@/api/types";
 import { useInventoryControlContext } from "./inventory-control-context";
-import { ItemsContainer } from "@/components/items";
 import {
   DropDragObjectIntoInventory,
   InventoryDropResult,
   UseDropBaseCollectedProps,
 } from "../dndTypes";
 import { FC } from "react";
+import { ItemsHeaderFilter } from "@/components/items/items-header-filter";
+import { ItemsSidebarFilter } from "@/components/items/items-sidebar-filter";
+import { useInventoryManagementContext } from "./inventory-management-context";
 
-type InventoryProps = {
-  data: InventoryType;
-};
-
-export const Inventory: FC<InventoryProps> = ({ data }) => {
+export const Inventory: FC = ({}) => {
+  const {
+    api: { data: inventoryData },
+  } = useInventoryManagementContext();
   const [{ canDrop, isOver }, drop] = useDrop<
     DropDragObjectIntoInventory,
     InventoryDropResult,
@@ -45,20 +45,21 @@ export const Inventory: FC<InventoryProps> = ({ data }) => {
 
   const isActive = canDrop && isOver;
   return (
-    <ItemsContainer
-      filter={filter}
-      setFilter={setFilter}
-      sort={sort}
-      setSort={setSort}
-    >
+    <div className="p-4 rounded-lg bg-gray-800/60 border border-gray-700 h-full flex flex-col">
+      <h2 className="text-2xl font-bold text-yellow-300 border-b border-gray-600 pb-3 mb-4">
+        Inventory
+      </h2>
+
+      <ItemsHeaderFilter setFilter={setFilter} sort={sort} setSort={setSort} />
+      <ItemsSidebarFilter filter={filter} setFilter={setFilter} />
       <InventoryItems
-        items={data.items}
+        items={inventoryData.items}
         dropRef={drop}
         tooltipId="inventory-item-tooltip"
         className={` ${
           isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""
         }`}
       />
-    </ItemsContainer>
+    </div>
   );
 };

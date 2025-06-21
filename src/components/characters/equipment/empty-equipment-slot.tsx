@@ -1,7 +1,6 @@
 import { CharacterEquipmentFields } from "@/api/enums";
 import { useDrop, DropTargetMonitor } from "react-dnd";
 import { equipmentFieldToItemType } from "./slot-mapping";
-import styles from "./equipment.module.scss";
 import dndStyles from "../dnd.module.scss";
 import Image from "next/image";
 import { allowDropToPrefixes } from "../dndHelpers";
@@ -48,9 +47,8 @@ export const EmptyEquipmentSlot: FC<EmptyEquipmentSlotProps> = ({
   return (
     <div
       ref={drop}
-      className={`${styles.emptyEquipmentSlot} ${
-        isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""
-      }`}
+      className={`w-full h-full
+        ${isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""}`}
       onClick={() =>
         onClickEquipmentSlot ? onClickEquipmentSlot(equipmentField) : null
       }
@@ -62,6 +60,7 @@ export const EmptyEquipmentSlot: FC<EmptyEquipmentSlotProps> = ({
             ? equipmentField.toLowerCase()
             : "ring"
         }.png`}
+        className="bg-white/10"
         sizes="(max-width: 768px) 15vw, (max-width: 1200px) 25vw, 33vw"
         fill
       />

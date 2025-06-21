@@ -1,3 +1,4 @@
+"use client";
 import { FC, createContext, useContext } from "react";
 import { useFetch } from "@/hooks/useFetch";
 import { Inventory as InventoryType } from "@/api/types";

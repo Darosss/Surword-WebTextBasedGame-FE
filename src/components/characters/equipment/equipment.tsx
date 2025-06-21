@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import styles from "./equipment.module.scss";
 import { InventoryItemType, UnEquipResponseType } from "@/api/types";
@@ -8,7 +9,6 @@ import { useCharacterManagementContext } from "@/components/characters";
 import { EquipmentItem } from "./equipment-item";
 import { EmptyEquipmentSlot } from "./empty-equipment-slot";
 import { isMercenaryCharacter } from "@/api/utils";
-import { HeroSelect } from "./hero-select";
 import { fetchBackendApi } from "@/api/fetch";
 import {
   useInventoryControlContext,
@@ -16,6 +16,7 @@ import {
 } from "../inventory";
 import { MercenaryItemFielDnDWrapper } from "./mercenary-item-field-dnd-wrapper";
 import { equipmentFieldToItemType } from "./slot-mapping";
+import { cn } from "@/lib/utils";
 
 export const Equipment: FC = () => {
   const tooltipId = "equipment-tooltip";
@@ -23,7 +24,6 @@ export const Equipment: FC = () => {
   const {
     api: { data: characterData },
     fetchData: fetchCharacterData,
-    currentCharacterIdState: [currentCharacterId, setCurrentCharacterId],
   } = useCharacterManagementContext();
 
   const { fetchData: fetchInventoryData } = useInventoryManagementContext();
@@ -48,63 +48,60 @@ export const Equipment: FC = () => {
   };
 
   return (
-    <div className={styles.equipmentWrapper}>
+    <>
       <ItemTooltipContentWrapper
-        customClassName={styles.equipmentTooltip}
+        customClassName={styles.inventoryTooltip}
         item={currentItem}
         tooltipId={tooltipId}
       />
+      {Object.values(CharacterEquipmentFields).map((eqField) => {
+        const currentSlot = characterData.equipment.slots[eqField];
+        return (
+          <div
+            key={eqField}
+            className={cn(
+              "relative max-w-3/4 aspect-square rounded-lg bg-black/40 border-2 border-dashed border-gray-600 flex flex-col items-center justify-center text-center text-xs text-gray-400 hover:bg-gray-700/50 hover:border-gray-500 transition-all",
+              "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            )}
+            style={{ gridArea: eqField.toLowerCase() }}
+          >
+            {currentSlot ? (
+              <EquipmentItem
+                currentField={eqField}
+                characterId={characterData.id}
+                item={currentSlot}
+                onHover={(item) => setCurrentItem(item)}
+                tooltipId={tooltipId}
+                onItemUnEquip={(characterId, slot) =>
+                  handleOnItemUnEquip(characterId, slot)
+                }
+              />
+            ) : (
+              <EmptyEquipmentSlot
+                equipmentField={eqField}
+                characterId={characterData.id}
+                onClickEquipmentSlot={(slot) =>
+                  setFilter((prevState) => ({
+                    ...prevState,
+                    showType: equipmentFieldToItemType[slot],
+                  }))
+                }
+              />
+            )}
+          </div>
+        );
+      })}
 
-      <div className={styles.equipmentContainer}>
-        {Object.values(CharacterEquipmentFields).map((eqField) => {
-          const currentSlot = characterData.equipment.slots[eqField];
-          return (
-            <div key={eqField} className={styles[eqField.toLowerCase()]}>
-              <div className={styles.background}></div>
-
-              {currentSlot ? (
-                <EquipmentItem
-                  currentField={eqField}
-                  characterId={characterData.id}
-                  item={currentSlot}
-                  onHover={(item) => setCurrentItem(item)}
-                  tooltipId={tooltipId}
-                  onItemUnEquip={(characterId, slot) =>
-                    handleOnItemUnEquip(characterId, slot)
-                  }
-                />
-              ) : (
-                <EmptyEquipmentSlot
-                  equipmentField={eqField}
-                  characterId={characterData.id}
-                  onClickEquipmentSlot={(slot) =>
-                    setFilter((prevState) => ({
-                      ...prevState,
-                      showType: equipmentFieldToItemType[slot],
-                    }))
-                  }
-                />
-              )}
-            </div>
-          );
-        })}
-        <div className={styles.heroSelect}>
-          <HeroSelect
-            currentCharacterId={currentCharacterId}
-            setCurrentCharacterId={setCurrentCharacterId}
+      {isMercenaryCharacter(characterData) ? (
+        <div className={styles.mercenaryItem}>
+          <MercenaryItemFielDnDWrapper
+            characterId={characterData.id}
+            mercenaryItem={characterData.mercenary}
+            onHover={(item) => setCurrentItem(item)}
+            tooltipId={tooltipId}
           />
         </div>
-        {isMercenaryCharacter(characterData) ? (
-          <div className={styles.mercenaryItem}>
-            <MercenaryItemFielDnDWrapper
-              characterId={characterData.id}
-              mercenaryItem={characterData.mercenary}
-              onHover={(item) => setCurrentItem(item)}
-              tooltipId={tooltipId}
-            />
-          </div>
-        ) : null}
-      </div>
-    </div>
+      ) : null}
+    </>
   );
 };

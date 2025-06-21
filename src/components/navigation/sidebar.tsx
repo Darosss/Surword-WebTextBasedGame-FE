@@ -15,9 +15,9 @@ import { COOKIE_TOKEN_NAME } from "@/api/fetch";
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthContext } from "../auth";
-import { Button } from "../components/ui/button";
+import { Button } from "@/components/ui/button";
 import Logo from "./Logo";
-import { cn } from "../lib/utils";
+import { cn } from "@/lib/utils";
 import { UserDetails } from "../user";
 
 type LinksType = {

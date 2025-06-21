@@ -174,6 +174,8 @@ body {
 main {
   display: flex;
   flex-grow: 1;
+  overflow: scroll;
+  max-height: 99dvh;
 }
 
 body {
@@ -296,6 +298,39 @@ a {
 }
 
 @layer utilities {
+  .character-equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+      "head overview overview overview neck"
+      "left_hand overview overview overview right_hand"
+      "chest overview overview overview arms"
+      "legs  overview overview overview foots"
+      "l_ring_1 overview overview overview r_ring_1"
+      "l_ring_2 overview overview overview r_ring_2"
+      ". overview overview overview ."
+      ". overview overview overview ."
+      ". overview overview overview .";
+    gap: 0.5rem;
+  }
+
+  /* Responsive adjustments for character equipment grid if needed */
+  @media (max-width: 420px) {
+    /* Example breakpoint for very small screens */
+    .character-equipment-grid {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-areas:
+        "head   neck"
+        "avatar avatar"
+        "left_hand right_hand"
+        "chest  arms"
+        "legs   foots"
+        "l_ring_1  l_ring_2"
+        "l_ring_1  r_ring_2";
+    }
+  }
+
   .header-size {
     width: var(--header-size);
     min-width: var(--header-size);

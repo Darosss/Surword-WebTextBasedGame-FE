@@ -6,8 +6,6 @@ import {
   DropResultAsMerchantItem,
 } from "../dndTypes";
 import { ItemDisplay } from "@/components/items";
-import styles from "./merchant.module.scss";
-import { useAuthContext } from "@/components/auth";
 import { allowDropToPrefixes } from "../dndHelpers";
 import { PossibleDropResultActions } from "../equipment";
 import { FC } from "react";
@@ -22,6 +20,7 @@ type MerchantItemsProps = {
   tooltipId: string;
   onHover: (item: InventoryItemType) => void;
   onItemBuy: (id: string, cost: number) => void;
+  currentGold: number;
 };
 
 export const MerchantItem: FC<MerchantItemsProps> = ({
@@ -29,6 +28,7 @@ export const MerchantItem: FC<MerchantItemsProps> = ({
   tooltipId,
   onHover,
   onItemBuy,
+  currentGold,
 }) => {
   const [{ opacity }, drag] = useDrag<
     DropDragObjectIntoInventory,
@@ -57,31 +57,20 @@ export const MerchantItem: FC<MerchantItemsProps> = ({
     }),
     [item, cost]
   );
-  const {
-    apiUser: {
-      api: {
-        data: {
-          user: { gold },
-        },
-      },
-    },
-  } = useAuthContext();
 
   return (
-    <div className={styles.oneItemWrapper}>
-      <ItemDisplay
-        refForWrapper={drag}
-        item={item}
-        costOptions={{
-          canAfford: cost <= gold,
-          value: cost,
-        }}
-        tooltipId={tooltipId}
-        onHover={(item) => {
-          onHover(item);
-        }}
-        opacity={opacity}
-      />
-    </div>
+    <ItemDisplay
+      refForWrapper={drag}
+      item={item}
+      costOptions={{
+        canAfford: cost <= currentGold,
+        value: cost,
+      }}
+      tooltipId={tooltipId}
+      onHover={(item) => {
+        onHover(item);
+      }}
+      opacity={opacity}
+    />
   );
 };

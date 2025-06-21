@@ -5,7 +5,8 @@ import { useFetch } from "@/hooks/useFetch";
 import { CurrentChallenge } from "./current-challenge";
 import { ChallengeData, ChoosenChallange } from "./types";
 import { FC, useEffect, useState } from "react";
-import { Button, FetchingInfo } from "@/components/common";
+import { FetchingInfo } from "@/components/common";
+import { Button } from "../ui/button";
 
 type SkirmishesResponse = {
   challenges: { [id: string]: ChallengeData };
@@ -135,7 +136,7 @@ const ChallengeDataAction = ({
       <div>TODO: if backend will have desc. soon description :P </div>
 
       <div className={styles.challengeActions}>
-        <Button onClick={() => fetchData()} defaultButtonType="success">
+        <Button onClick={() => fetchData()} variant="success">
           Start
         </Button>
       </div>

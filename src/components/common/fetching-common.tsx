@@ -1,6 +1,6 @@
 import { FC } from "react";
 import styles from "./fetching-info.module.scss";
-import { Button } from ".";
+import { Button } from "../ui/button";
 
 type FetchingInfoProps = {
   isPending: null | boolean;
@@ -45,7 +45,7 @@ export const Error: FC<ErrorProps> = ({ error, refetch }) => {
         <div className={styles.text}>{error}</div>
         {refetch ? (
           <div className={styles.tryAgainWrapper}>
-            <Button onClick={refetch} defaultButtonType="info">
+            <Button onClick={refetch} variant="warning">
               Try again
             </Button>
           </div>

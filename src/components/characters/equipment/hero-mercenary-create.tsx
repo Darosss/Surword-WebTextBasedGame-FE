@@ -1,6 +1,6 @@
 import { fetchBackendApi } from "@/api/fetch";
 import { MercenaryCharacter } from "@/api/types";
-import { Button } from "@/components/common";
+import { Button } from "@/components/ui/button";
 import { FC } from "react";
 
 type HeroMercenaryCreateProps = {
@@ -12,7 +12,7 @@ export const HeroMercenaryCreate: FC<HeroMercenaryCreateProps> = ({
 }) => {
   return (
     <Button
-      defaultButtonType="info"
+      variant="warning"
       onClick={() => {
         fetchBackendApi<MercenaryCharacter>({
           url: "characters/create-mercenary",

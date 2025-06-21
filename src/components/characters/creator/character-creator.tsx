@@ -36,11 +36,7 @@ export const CharacterCreator: FC = () => {
       <h1 className="text-3xl">Character creator</h1>
 
       <div>
-        <Button
-          variant="default"
-          className="bg-warning"
-          onClick={() => fetchData()}
-        >
+        <Button variant="warning" onClick={() => fetchData()}>
           Create main character
         </Button>
       </div>

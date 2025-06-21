@@ -3,7 +3,7 @@ import styles from "./current-challenge.module.scss";
 import { ChallengeData, ChoosenChallange } from "../types";
 import { formatTime } from "@/utils/utils";
 import { useFetch } from "@/hooks/useFetch";
-import { Button } from "@/components/common";
+import { Button } from "@/components/ui/button";
 import { FightReportType } from "@/api/types";
 import { FightReportDisplay } from "@/components/fight-report";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
@@ -62,7 +62,7 @@ export const CurrentChallenge: FC<CurrentChallengeProps> = ({
           <FightReportDisplay report={data} />
 
           <div className={styles.reportButtonConfirm}>
-            <Button onClick={onConfirmReport} defaultButtonType="success">
+            <Button onClick={onConfirmReport} variant="success">
               Confirm
             </Button>
           </div>
@@ -119,7 +119,7 @@ const CancelCurrentChallengeButton = ({
     if (data) onCancel();
   };
   return (
-    <Button onClick={() => handleOnCancel()} defaultButtonType="danger">
+    <Button onClick={() => handleOnCancel()} variant="destructive">
       {isPending ? "Wait" : "Cancel"}
     </Button>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/common";
+import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 
 export default function Error({
@@ -17,7 +17,7 @@ export default function Error({
   return (
     <div>
       <h2>Something went wrong!</h2>
-      <Button onClick={() => reset()} defaultButtonType="info">
+      <Button onClick={() => reset()} variant="warning">
         Try again
       </Button>
     </div>

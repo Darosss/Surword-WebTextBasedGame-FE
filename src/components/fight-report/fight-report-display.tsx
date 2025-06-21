@@ -2,9 +2,9 @@ import React, { FC, useState } from "react";
 import { FightReportType } from "@/api/types";
 import styles from "./fight-report.module.scss";
 import { ItemDisplay } from "@/components/items";
-import { Button } from "@/components/common";
 import { FightReportTurns } from "./fight-report-turns";
 import { Participants } from "./participants";
+import { Button } from "../ui/button";
 
 type FightReportDisplayProps = {
   report: FightReportType;
@@ -56,7 +56,7 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
       <div className={styles.fightReportLogsWrapper}>
         <div className={styles.expandButtonWrapper}>
           <Button
-            defaultButtonType="secondary"
+            variant="success"
             onClick={() => handleOnClickExpandLogsButton()}
           >
             Battle logs

@@ -1,11 +1,11 @@
 import { formatTime, getRemainingTimeFromDateToDate } from "@/utils/utils";
 import { FC, useEffect, useState } from "react";
-import { Button } from "@/components/common";
 import styles from "./dungeons.module.scss";
 import { useFetch } from "@/hooks/useFetch";
 import { FightReportDisplay } from "@/components/fight-report";
 import { FightReportType } from "@/api/types";
 import { useAuthContext } from "@/components/auth";
+import { Button } from "../ui/button";
 
 type DungeonActionsProps = {
   dungeonLevel: number;
@@ -79,7 +79,7 @@ export const DungeonActions: FC<DungeonActionsProps> = ({
                 onConfirmReport();
                 setShowReport(false);
               }}
-              defaultButtonType="success"
+              variant="success"
             >
               Confirm
             </Button>
@@ -88,7 +88,7 @@ export const DungeonActions: FC<DungeonActionsProps> = ({
       ) : remainingTime != 0 ? (
         formatTime(remainingTime)
       ) : (
-        <Button defaultButtonType="danger" onClick={fetchData}>
+        <Button variant="destructive" onClick={() => fetchData()}>
           Fight
         </Button>
       )}

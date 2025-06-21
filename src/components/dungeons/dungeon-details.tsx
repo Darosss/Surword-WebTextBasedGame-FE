@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { Button } from "@/components/common";
 import styles from "./dungeons.module.scss";
 import { CompletedDungeons } from "./types";
+import { Button } from "../ui/button";
 
 type DungeonDetailsProps = {
   increaseCurrentLevel: () => void;

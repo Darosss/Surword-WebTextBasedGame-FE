@@ -1,8 +1,6 @@
 "use client";
-import { Dispatch, FC, SetStateAction, useState } from "react";
-import { Button } from "@/components/common";
+import { Dispatch, FC, SetStateAction } from "react";
 import { FilterType, SortByKeysType, SortType } from "./types";
-import styles from "./items-header-filter.module.scss";
 
 import { Search } from "lucide-react";
 import { Input } from "../ui/input";
@@ -28,9 +26,6 @@ export const sortByKeys: SortByKeysType[] = [
   "upgradePoints",
   "weight",
 ];
-
-const AscendingArrow: FC = () => <span>&#9650;</span>;
-const DescendingArrow: FC = () => <span>&#9660;</span>;
 
 export const ItemsHeaderFilter: FC<ItemsHeaderFilterProps> = ({
   setFilter,

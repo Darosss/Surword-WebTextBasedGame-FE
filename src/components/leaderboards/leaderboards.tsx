@@ -4,11 +4,12 @@ import { FC, useEffect, useState } from "react";
 import styles from "./leaderboards.module.scss";
 import { useFetch } from "@/hooks/useFetch";
 import { LeaderboardsResponse } from "@/api/types";
-import { Button, FetchingInfo } from "../common";
+import { FetchingInfo } from "../common";
 import { LeaderboardsCategories } from "@/api/enums";
 import { useRouter } from "next/navigation";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 import { formatTime } from "@/utils/utils";
+import { Button } from "../ui/button";
 
 export const Leaderboards: FC = () => {
   const router = useRouter();
@@ -68,9 +69,7 @@ export const Leaderboards: FC = () => {
         {Object.values(LeaderboardsCategories).map((category) => (
           <Button
             key={category}
-            defaultButtonType={`${
-              category === data.category ? "success" : "primary"
-            }`}
+            variant={category === data.category ? "success" : "default"}
             onClick={() => setCurrentCategory(category)}
           >
             {category}
@@ -88,7 +87,6 @@ export const Leaderboards: FC = () => {
             <div>{leaderboardData.place}</div>
             <div>
               <Button
-                defaultButtonType="primary"
                 onClick={() =>
                   router.push(`overview/user/${leaderboardData.userId}`)
                 }

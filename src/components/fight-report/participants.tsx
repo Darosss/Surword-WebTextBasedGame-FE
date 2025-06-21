@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction, useState } from "react";
 import { CharacterTypesAlias, NpcEnemy } from "@/api/types";
 import { CharacterPreview, EnemyPreview } from "../characters";
 import styles from "./fight-report.module.scss";
-import { Button } from "@/components/common";
+import { Button } from "../ui/button";
 
 type ParticipantsProps = {
   characters: CharacterTypesAlias[];

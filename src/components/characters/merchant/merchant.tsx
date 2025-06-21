@@ -2,12 +2,7 @@
 
 import { InventoryItemType, ItemsCostType } from "@/api/types";
 import React, { FC, useMemo, useState } from "react";
-import styles from "./merchant.module.scss";
-import {
-  ItemTooltipContentWrapper,
-  filterItemsEntries,
-  getSortedItems,
-} from "@/components/items";
+import { filterItemsEntries, getSortedItems } from "@/components/items";
 import type { FilterType, SortType } from "@/components/items";
 import { MerchantItem } from "./merchant-item";
 import { fetchBackendApi } from "@/api/fetch";
@@ -30,8 +25,6 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Coins } from "lucide-react";
 import { ItemsHeaderFilter } from "@/components/items/items-header-filter";
 import { ItemsSidebarFilter } from "@/components/items/items-sidebar-filter";
-
-const TOOLTIP_ID = "merchant-item-tooltip";
 
 const findCostForItem = (itemsCost: ItemsCostType, itemId: string) =>
   Object.entries(itemsCost).find(([id]) => id === itemId);
@@ -72,10 +65,6 @@ export const Merchant: FC = () => {
   } = useAuthContext();
 
   const { fetchData: fetchInventoryData } = useInventoryManagementContext();
-
-  const [currentItem, setCurrentItem] = useState<InventoryItemType | null>(
-    null
-  );
 
   const [filter, setFilter] = useState<FilterType>({
     name: null,
@@ -141,11 +130,6 @@ export const Merchant: FC = () => {
       </div>
       <ItemsHeaderFilter setFilter={setFilter} sort={sort} setSort={setSort} />
       <ItemsSidebarFilter setFilter={setFilter} filter={filter} />
-      <ItemTooltipContentWrapper
-        customClassName={styles.inventoryTooltip}
-        item={currentItem}
-        tooltipId={TOOLTIP_ID}
-      />
 
       <ScrollArea className="flex-grow">
         <ScrollBar />
@@ -166,8 +150,6 @@ export const Merchant: FC = () => {
               <MerchantItem
                 key={value[0]}
                 itemData={{ item: value[1], cost: itemCost }}
-                tooltipId={TOOLTIP_ID}
-                onHover={setCurrentItem}
                 onItemBuy={handleOnBuyItem}
                 currentGold={userData.user.gold}
               />

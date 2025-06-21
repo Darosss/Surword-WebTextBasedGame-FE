@@ -15,8 +15,6 @@ type EquipmentItemProps = {
   currentField: CharacterEquipmentFields;
   characterId: string;
   item: InventoryItemType;
-  onHover: (item: InventoryItemType) => void;
-  tooltipId: string;
   onItemUnEquip?: (
     characterId: string,
     slotName: CharacterEquipmentFields
@@ -25,8 +23,6 @@ type EquipmentItemProps = {
 
 export const EquipmentItem: FC<EquipmentItemProps> = ({
   item,
-  onHover,
-  tooltipId,
   onItemUnEquip,
   characterId,
   currentField,
@@ -58,13 +54,5 @@ export const EquipmentItem: FC<EquipmentItemProps> = ({
     }),
     [item]
   );
-  return (
-    <ItemDisplay
-      refForWrapper={drag}
-      item={item}
-      onHover={(item) => onHover(item)}
-      tooltipId={tooltipId}
-      opacity={opacity}
-    />
-  );
+  return <ItemDisplay refForWrapper={drag} item={item} opacity={opacity} />;
 };

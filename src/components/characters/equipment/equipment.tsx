@@ -1,10 +1,9 @@
 "use client";
 import React from "react";
 import styles from "./equipment.module.scss";
-import { InventoryItemType, UnEquipResponseType } from "@/api/types";
+import { UnEquipResponseType } from "@/api/types";
 import { CharacterEquipmentFields } from "@/api/enums";
-import { FC, useState } from "react";
-import { ItemTooltipContentWrapper } from "@/components/items";
+import { FC } from "react";
 import { useCharacterManagementContext } from "@/components/characters";
 import { EquipmentItem } from "./equipment-item";
 import { EmptyEquipmentSlot } from "./empty-equipment-slot";
@@ -19,8 +18,6 @@ import { equipmentFieldToItemType } from "./slot-mapping";
 import { cn } from "@/lib/utils";
 
 export const Equipment: FC = () => {
-  const tooltipId = "equipment-tooltip";
-
   const {
     api: { data: characterData },
     fetchData: fetchCharacterData,
@@ -29,9 +26,6 @@ export const Equipment: FC = () => {
   const { fetchData: fetchInventoryData } = useInventoryManagementContext();
 
   const { setFilter } = useInventoryControlContext();
-  const [currentItem, setCurrentItem] = useState<InventoryItemType | null>(
-    null
-  );
 
   const handleOnItemUnEquip = (
     characterId: string,
@@ -49,11 +43,6 @@ export const Equipment: FC = () => {
 
   return (
     <>
-      <ItemTooltipContentWrapper
-        customClassName={styles.inventoryTooltip}
-        item={currentItem}
-        tooltipId={tooltipId}
-      />
       {Object.values(CharacterEquipmentFields).map((eqField) => {
         const currentSlot = characterData.equipment.slots[eqField];
         return (
@@ -70,8 +59,6 @@ export const Equipment: FC = () => {
                 currentField={eqField}
                 characterId={characterData.id}
                 item={currentSlot}
-                onHover={(item) => setCurrentItem(item)}
-                tooltipId={tooltipId}
                 onItemUnEquip={(characterId, slot) =>
                   handleOnItemUnEquip(characterId, slot)
                 }
@@ -97,8 +84,6 @@ export const Equipment: FC = () => {
           <MercenaryItemFielDnDWrapper
             characterId={characterData.id}
             mercenaryItem={characterData.mercenary}
-            onHover={(item) => setCurrentItem(item)}
-            tooltipId={tooltipId}
           />
         </div>
       ) : null}

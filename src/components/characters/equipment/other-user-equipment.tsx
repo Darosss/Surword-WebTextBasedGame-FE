@@ -1,10 +1,8 @@
 "use client";
 import React from "react";
 import styles from "./equipment.module.scss";
-import { InventoryItemType } from "@/api/types";
 import { CharacterEquipmentFields } from "@/api/enums";
-import { FC, useState } from "react";
-import { ItemTooltipContentWrapper } from "@/components/items";
+import { FC } from "react";
 import { useCharacterManagementContext } from "@/components/characters";
 import { EquipmentItem } from "./equipment-item";
 import { EmptyEquipmentSlot } from "./empty-equipment-slot";
@@ -21,25 +19,13 @@ type OtherUserEquipmentProps = {
 };
 
 export const OtherUserEquipment: FC<OtherUserEquipmentProps> = ({ userId }) => {
-  const tooltipId = "equipment-tooltip";
-
   const {
     api: { data: characterData },
     currentCharacterIdState: [currentCharacterId, setCurrentCharacterId],
   } = useCharacterManagementContext();
 
-  const [currentItem, setCurrentItem] = useState<InventoryItemType | null>(
-    null
-  );
-
   return (
     <div className={styles.equipmentWrapper}>
-      <ItemTooltipContentWrapper
-        customClassName={styles.equipmentTooltip}
-        item={currentItem}
-        tooltipId={tooltipId}
-      />
-
       <div className={styles.equipmentContainer}>
         {Object.values(CharacterEquipmentFields).map((eqField) => {
           const currentSlot = characterData.equipment.slots[eqField];
@@ -52,8 +38,6 @@ export const OtherUserEquipment: FC<OtherUserEquipmentProps> = ({ userId }) => {
                   currentField={eqField}
                   characterId={characterData.id}
                   item={currentSlot}
-                  onHover={(item) => setCurrentItem(item)}
-                  tooltipId={tooltipId}
                 />
               ) : (
                 <EmptyEquipmentSlot
@@ -73,11 +57,7 @@ export const OtherUserEquipment: FC<OtherUserEquipmentProps> = ({ userId }) => {
         </div>
         {isMercenaryCharacter(characterData) ? (
           <div className={styles.mercenaryItem}>
-            <MercenaryItemField
-              mercenaryItem={characterData.mercenary}
-              onHover={(item) => setCurrentItem(item)}
-              tooltipId={tooltipId}
-            />
+            <MercenaryItemField mercenaryItem={characterData.mercenary} />
           </div>
         ) : null}
       </div>

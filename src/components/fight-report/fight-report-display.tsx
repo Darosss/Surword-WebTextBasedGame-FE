@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
-import { FightReportType, InventoryItemType } from "@/api/types";
+import { FightReportType } from "@/api/types";
 import styles from "./fight-report.module.scss";
-import { ItemDisplay, ItemTooltipContentWrapper } from "@/components/items";
+import { ItemDisplay } from "@/components/items";
 import { Button } from "@/components/common";
 import { FightReportTurns } from "./fight-report-turns";
 import { Participants } from "./participants";
@@ -16,12 +16,8 @@ enum CurrentView {
   EXPANDED_STATS = "expandedStats",
   //TODO: expanded stats
 }
-const tooltipId = "equipment-tooltip";
 
 export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
-  const [itemOnHover, setItemOnHover] = useState<InventoryItemType | null>(
-    null
-  );
   const [currentView, setCurrentView] = useState<CurrentView>(
     CurrentView.DEFAULT
   );
@@ -35,11 +31,6 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
 
   return (
     <div className={`${styles.fightReportWrapper} ${styles[currentView]}`}>
-      <ItemTooltipContentWrapper
-        customClassName={styles.fightReportTooltip}
-        item={itemOnHover}
-        tooltipId={tooltipId}
-      />
       <div className={styles.reportBaseDetails}>
         <div>
           <div>{report.status}</div>
@@ -52,11 +43,7 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
               key={JSON.stringify(item.id)}
               className={styles.itemLootWrapper}
             >
-              <ItemDisplay
-                item={item}
-                tooltipId={tooltipId}
-                onHover={(item) => setItemOnHover(item)}
-              />
+              <ItemDisplay item={item} />
             </div>
           ))}
         </div>

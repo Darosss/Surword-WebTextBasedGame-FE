@@ -17,16 +17,12 @@ type MerchantItemData = {
 
 type MerchantItemsProps = {
   itemData: MerchantItemData;
-  tooltipId: string;
-  onHover: (item: InventoryItemType) => void;
   onItemBuy: (id: string, cost: number) => void;
   currentGold: number;
 };
 
 export const MerchantItem: FC<MerchantItemsProps> = ({
   itemData: { item, cost },
-  tooltipId,
-  onHover,
   onItemBuy,
   currentGold,
 }) => {
@@ -65,10 +61,6 @@ export const MerchantItem: FC<MerchantItemsProps> = ({
       costOptions={{
         canAfford: cost <= currentGold,
         value: cost,
-      }}
-      tooltipId={tooltipId}
-      onHover={(item) => {
-        onHover(item);
       }}
       opacity={opacity}
     />

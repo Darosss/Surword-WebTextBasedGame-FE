@@ -13,8 +13,6 @@ import { PossibleDropResultActions } from "../equipment";
 
 type InventoryItemProps = {
   inventoryItem: [string, InventoryItemType];
-  tooltipId: string;
-  onHover: (item: InventoryItemType) => void;
   onItemEquip: (
     characterId: string,
     itemId: string,
@@ -26,9 +24,7 @@ type InventoryItemProps = {
 };
 
 export const InventoryItem: FC<InventoryItemProps> = ({
-  inventoryItem: [id, item],
-  tooltipId,
-  onHover,
+  inventoryItem: [_, item],
   onItemEquip,
   onItemConsume,
   onMercenaryWear,
@@ -67,13 +63,5 @@ export const InventoryItem: FC<InventoryItemProps> = ({
     }),
     [item]
   );
-  return (
-    <ItemDisplay
-      refForWrapper={drag}
-      item={item}
-      tooltipId={tooltipId}
-      onHover={(item) => onHover(item)}
-      opacity={opacity}
-    />
-  );
+  return <ItemDisplay refForWrapper={drag} item={item} opacity={opacity} />;
 };

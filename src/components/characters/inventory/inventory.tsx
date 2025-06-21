@@ -55,7 +55,6 @@ export const Inventory: FC = ({}) => {
       <InventoryItems
         items={inventoryData.items}
         dropRef={drop}
-        tooltipId="inventory-item-tooltip"
         className={` ${
           isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""
         }`}

@@ -1,9 +1,8 @@
 import {
   InventoryItems as InventoryItemsType,
   EquipResponseType,
-  InventoryItemType,
 } from "@/api/types";
-import { FC, Ref, useMemo, useState } from "react";
+import { FC, Ref, useMemo } from "react";
 import styles from "./inventory-items.module.scss";
 import { CharacterEquipmentFields } from "@/api/enums";
 import {
@@ -13,18 +12,13 @@ import {
 import { InventoryItem } from "./inventory-item";
 import { useInventoryControlContext } from "./inventory-control-context";
 import { fetchBackendApi } from "@/api/fetch";
-import {
-  ItemTooltipContentWrapper,
-  filterItemsEntries,
-  getSortedItems,
-} from "@/components/items";
+import { filterItemsEntries, getSortedItems } from "@/components/items";
 import { useAuthContext } from "@/components/auth";
 import { useInventoryManagementContext } from ".";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 type InventoryItemsProps = {
   items?: InventoryItemsType;
-  tooltipId: string;
   //TODO: move this to conetxt probably;
   dropRef: Ref<HTMLDivElement>;
   className?: string;
@@ -32,7 +26,6 @@ type InventoryItemsProps = {
 
 export const InventoryItems: FC<InventoryItemsProps> = ({
   items,
-  tooltipId,
   dropRef,
   className,
 }) => {
@@ -43,9 +36,6 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
   const {
     apiMerchant: { fetchData: fetchMerchantData },
   } = useMerchantContext();
-  const [currentItem, setCurrentItem] = useState<InventoryItemType | null>(
-    null
-  );
 
   const {
     apiUser: { fetchData: fetchUserData },
@@ -116,18 +106,11 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
         } `}
         ref={dropRef}
       >
-        <ItemTooltipContentWrapper
-          customClassName={styles.inventoryTooltip}
-          item={currentItem}
-          tooltipId={tooltipId}
-        />
         {itemsToRender.map((val) => (
           <div key={val[0]} className={styles.oneItemWrapper}>
             <InventoryItem
               key={val[0]}
               inventoryItem={val}
-              tooltipId={tooltipId}
-              onHover={(item) => setCurrentItem(item)}
               onItemEquip={(characterId, itemId, slot) =>
                 handleOnItemEquip(characterId, itemId, slot)
               }

@@ -116,11 +116,10 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
           <div
             className={`grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-6 md:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5 gap-2 pr-2`}
           >
-            {paginatedItems.map((val) => (
-              <div key={val[0]} className={styles.oneItemWrapper}>
+            {paginatedItems.map(([_, item]) => (
+              <div key={item.id} className={styles.oneItemWrapper}>
                 <InventoryItem
-                  key={val[0]}
-                  inventoryItem={val}
+                  inventoryItem={item}
                   onItemEquip={(characterId, itemId, slot) =>
                     handleOnItemEquip(characterId, itemId, slot)
                   }

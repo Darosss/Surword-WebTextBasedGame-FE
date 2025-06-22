@@ -12,7 +12,7 @@ import { allowDropToPrefixes } from "../dndHelpers";
 import { PossibleDropResultActions } from "../equipment";
 
 type InventoryItemProps = {
-  inventoryItem: [string, InventoryItemType];
+  inventoryItem: InventoryItemType;
   onItemEquip: (
     characterId: string,
     itemId: string,
@@ -24,7 +24,7 @@ type InventoryItemProps = {
 };
 
 export const InventoryItem: FC<InventoryItemProps> = ({
-  inventoryItem: [_, item],
+  inventoryItem: item,
   onItemEquip,
   onItemConsume,
   onMercenaryWear,

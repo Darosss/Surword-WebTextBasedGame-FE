@@ -45,7 +45,7 @@ export const Inventory: FC = ({}) => {
 
   const isActive = canDrop && isOver;
   return (
-    <div className="p-4 rounded-lg bg-gray-800/60 border border-gray-700 h-full flex flex-col">
+    <div className="p-4 rounded-lg bg-gray-800/60 border border-gray-700 h-full flex flex-col overflow-hidden">
       <h2 className="text-2xl font-bold text-yellow-300 border-b border-gray-600 pb-3 mb-4">
         Inventory
       </h2>

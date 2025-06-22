@@ -17,13 +17,17 @@ import { useAuthContext } from "@/components/auth";
 import { useInventoryManagementContext } from ".";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+import { ItemsPagination } from "./items-pagination";
+import { usePagination } from "@/hooks/usePagination";
+import { cn } from "@/lib/utils";
+
 type InventoryItemsProps = {
   items?: InventoryItemsType;
   //TODO: move this to conetxt probably;
   dropRef: Ref<HTMLDivElement>;
   className?: string;
 };
-
+const PAGE_SIZE = 35;
 export const InventoryItems: FC<InventoryItemsProps> = ({
   items,
   dropRef,
@@ -46,6 +50,13 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
       items ? getSortedItems(filterItemsEntries(items, filter), sort) : [],
     [items, filter, sort]
   );
+
+  const {
+    page,
+    setPage,
+    data: paginatedItems,
+    pagesCount,
+  } = usePagination(itemsToRender, PAGE_SIZE);
 
   const handleOnItemConusme = (itemId: string) => {
     fetchBackendApi<boolean>({
@@ -99,30 +110,38 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
     });
   };
   return (
-    <ScrollArea className="flex-grow">
-      <div
-        className={`grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-6 md:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5 gap-2 pr-2 ${
-          className ? className : ""
-        } `}
-        ref={dropRef}
-      >
-        {itemsToRender.map((val) => (
-          <div key={val[0]} className={styles.oneItemWrapper}>
-            <InventoryItem
-              key={val[0]}
-              inventoryItem={val}
-              onItemEquip={(characterId, itemId, slot) =>
-                handleOnItemEquip(characterId, itemId, slot)
-              }
-              onItemConsume={(itemId) => handleOnItemConusme(itemId)}
-              onMercenaryWear={(characterId, itemId) =>
-                handleOnMercenaryWear(characterId, itemId)
-              }
-              onItemSell={handleOnSellItem}
-            />
+    <div className="relative rounded-lg bg-gray-800/60 h-full flex flex-col overflow-hidden justify-between">
+      <ScrollArea className="flex-grow min-h-[calc(100dvh-20rem)] ">
+        <div className={cn(className)} ref={dropRef}>
+          <div
+            className={`grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-6 md:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5 gap-2 pr-2`}
+          >
+            {paginatedItems.map((val) => (
+              <div key={val[0]} className={styles.oneItemWrapper}>
+                <InventoryItem
+                  key={val[0]}
+                  inventoryItem={val}
+                  onItemEquip={(characterId, itemId, slot) =>
+                    handleOnItemEquip(characterId, itemId, slot)
+                  }
+                  onItemConsume={(itemId) => handleOnItemConusme(itemId)}
+                  onMercenaryWear={(characterId, itemId) =>
+                    handleOnMercenaryWear(characterId, itemId)
+                  }
+                  onItemSell={handleOnSellItem}
+                />
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+      </ScrollArea>
+      <div className="w-full bg-gray-800/90 h-12 p-1 border border-gray-700">
+        <ItemsPagination
+          pagesCount={pagesCount}
+          page={page}
+          onChangePage={(newPage) => setPage(newPage)}
+        />
       </div>
-    </ScrollArea>
+    </div>
   );
 };

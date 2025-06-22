@@ -171,7 +171,8 @@ export const BaseDetails: FC<BaseDetailsProps> = ({ character }) => {
   const { name, level, health } = character;
   const isMercenary = isMercenaryCharacter(character);
 
-  const maxHealth = character.stats.additionalStatistics["MAX_HEALTH"].value;
+  const maxHealth =
+    character.stats.additionalStatistics["MAX_HEALTH"].effectiveValue;
   const hpPercentage = character ? (character.health / maxHealth) * 100 : 0;
   const xpPercentage = !isMercenaryCharacter(character)
     ? (character.health / character.expToLevelUp) * 100

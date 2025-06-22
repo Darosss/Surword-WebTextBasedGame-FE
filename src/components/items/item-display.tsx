@@ -47,12 +47,16 @@ const ItemWrapper: FC<ItemWrapper> = ({
   );
 };
 
-export const ItemDisplay: FC<ItemDisplayProps> = ({ item, costOptions }) => {
+export const ItemDisplay: FC<ItemDisplayProps> = ({
+  item,
+  costOptions,
+  ...props
+}) => {
   const currentRarityStyles = rarityStyles[item.rarity];
   return (
     <HoverCard openDelay={50} closeDelay={50}>
       <HoverCardTrigger className="w-full">
-        <ItemWrapper rarity={item.rarity}>
+        <ItemWrapper rarity={item.rarity} {...props}>
           {item ? (
             <>
               <div

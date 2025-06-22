@@ -25,7 +25,7 @@ export default function OverviewPage() {
               </div>
 
               <MerchantContextProvider>
-                <div className="flex-grow min-w-0">
+                <div className="flex-grow min-w-0 w-[20dvw]">
                   <Inventory />
                 </div>
                 <div className="lg:w-[420px] lg:flex-shrink-0">

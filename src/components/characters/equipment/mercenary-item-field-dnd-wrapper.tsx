@@ -1,5 +1,4 @@
 import { FC } from "react";
-import styles from "./equipment.module.scss";
 import dndStyles from "../dnd.module.scss";
 import { ItemType } from "@/api/enums";
 import { fetchBackendApi } from "@/api/fetch";
@@ -45,7 +44,6 @@ export const MercenaryItemFielDnDWrapper: FC<
   const { fetchData: fetchInventoryData } = useInventoryManagementContext();
 
   const { setFilter } = useInventoryControlContext();
-
   const [{ canDrop, isOver }, drop] = useDrop<
     unknown,
     MercenaryEquipmentFieldDropResult,
@@ -93,7 +91,6 @@ export const MercenaryItemFielDnDWrapper: FC<
     }),
     [mercenaryItem]
   );
-
   const onUnEquipMercenary = () => {
     fetchBackendApi<UnEquipResponseType>({
       url: `characters/un-equip-mercenary/${characterId}`,
@@ -109,10 +106,9 @@ export const MercenaryItemFielDnDWrapper: FC<
   return (
     <div
       ref={drop}
-      className={`${styles.emptyEquipmentSlot} ${
-        isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""
-      }`}
-      style={{ opacity: opacity, zIndex: 200 }}
+      className={`w-full h-full
+        ${isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""}`}
+      style={{ opacity }}
       onClick={() =>
         setFilter((prevState) => ({
           ...prevState,

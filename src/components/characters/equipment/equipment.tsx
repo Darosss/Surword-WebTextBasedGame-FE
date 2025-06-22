@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import styles from "./equipment.module.scss";
 import { UnEquipResponseType } from "@/api/types";
 import { CharacterEquipmentFields } from "@/api/enums";
 import { FC } from "react";
@@ -81,10 +80,17 @@ export const Equipment: FC = () => {
       })}
 
       {isMercenaryCharacter(characterData) ? (
-        <div className={styles.mercenaryItem}>
+        <div
+          className={cn(
+            "relative max-w-3/4 aspect-square rounded-lg bg-black/40 border-2 border-gray-600 flex flex-col items-center justify-center text-center text-xs text-gray-400 hover:bg-gray-700/50 hover:border-gray-500 transition-all",
+            "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+            characterData.mercenary ? "border-0" : "border-dashed"
+          )}
+          style={{ gridArea: "mercenary" }}
+        >
           <MercenaryItemFielDnDWrapper
-            characterId={characterData.id}
             mercenaryItem={characterData.mercenary}
+            characterId={characterData.id}
           />
         </div>
       ) : null}

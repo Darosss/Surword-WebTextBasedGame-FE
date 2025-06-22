@@ -1,9 +1,11 @@
 import { TrainBaseStatisticButton } from "@/components/characters/details/statistics";
+
 import {
   HoverCard,
-  HoverCardTrigger,
   HoverCardContent,
-} from "@radix-ui/react-hover-card";
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+
 import { HelpCircle } from "lucide-react";
 
 type StatsRowProps = {
@@ -27,8 +29,12 @@ export const StatRow = ({
           <HoverCardTrigger>
             <HelpCircle className="hover:brightness-75 hover:cursor-help" />
           </HoverCardTrigger>
-          <HoverCardContent>
-            <div className="w-xs flex justify-between gap-4 bg-primary p-2 pl-6 pr-6 rounded-md">
+          <HoverCardContent
+            sideOffset={0}
+            className="z-[102] bg-current border-none shadow-none w-auto"
+          >
+            <div className="w-xs flex justify-between gap-4 bg-opacity-90 backdrop-blur-sm p-2 rounded-md border border-blue-500">
+              <hr className="border-blue-700/70" />
               <div className="w-full space-y-1 ">{tooltipText}</div>
             </div>
           </HoverCardContent>

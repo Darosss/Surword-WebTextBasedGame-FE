@@ -39,10 +39,10 @@ export const BaseStatistics: FC<BaseStatisticsProps> = ({
             "w-full flex items-center justify-between py-2.5 border-b border-gray-700/100 last:border-b-0"
           }
         >
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 pl-2">
             <span className="text-gray-300 text-sm">{key}</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 pr-4">
             <span className="font-semibold text-white text-sm">
               {statValues[key as keyof typeof statValues]}
             </span>

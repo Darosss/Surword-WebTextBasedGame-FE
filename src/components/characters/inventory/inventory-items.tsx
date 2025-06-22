@@ -3,7 +3,6 @@ import {
   EquipResponseType,
 } from "@/api/types";
 import { FC, Ref, useMemo } from "react";
-import styles from "./inventory-items.module.scss";
 import { CharacterEquipmentFields } from "@/api/enums";
 import {
   useCharacterManagementContext,
@@ -20,6 +19,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ItemsPagination } from "./items-pagination";
 import { usePagination } from "@/hooks/usePagination";
 import { cn } from "@/lib/utils";
+import { EmptyItemDisplay } from "@/components/items/item-display";
 
 type InventoryItemsProps = {
   items?: InventoryItemsType;
@@ -117,7 +117,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
             className={`grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-6 md:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5 gap-2 pr-2`}
           >
             {paginatedItems.map(([_, item]) => (
-              <div key={item.id} className={styles.oneItemWrapper}>
+              <div key={item.id}>
                 <InventoryItem
                   inventoryItem={item}
                   onItemEquip={(characterId, itemId, slot) =>
@@ -130,6 +130,11 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
                   onItemSell={handleOnSellItem}
                 />
               </div>
+            ))}
+            {Array.from({
+              length: Math.max(0, PAGE_SIZE - paginatedItems.length),
+            }).map((_, i) => (
+              <EmptyItemDisplay key={`empty-inv-${i}`} />
             ))}
           </div>
         </div>

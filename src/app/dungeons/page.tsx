@@ -3,7 +3,7 @@ import styles from "./dungeons.module.scss";
 
 export default async function DungeonsPage() {
   return (
-    <main className={styles.dungeonsPageWrapper}>
+    <main>
       <h1>Dungeons</h1>
       <Dungeons />
     </main>

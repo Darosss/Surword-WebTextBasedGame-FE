@@ -1,6 +1,5 @@
 import { formatTime, getRemainingTimeFromDateToDate } from "@/utils/utils";
 import { FC, useEffect, useState } from "react";
-import styles from "./dungeons.module.scss";
 import { useFetch } from "@/hooks/useFetch";
 import { FightReportDisplay } from "@/components/fight-report";
 import { FightReportType } from "@/api/types";
@@ -68,18 +67,19 @@ export const DungeonActions: FC<DungeonActionsProps> = ({
   }, [data, fetchUserData]);
 
   return (
-    <div className={styles.dungeonActionsWrapper}>
+    <div>
       {data && showReport ? (
-        <div className={styles.reportDisplayWrapper}>
+        <div className="bg-transparent backdrop-blur-md absolute top-0 bottom-0 left-0 right-0">
           <FightReportDisplay report={data} />
 
-          <div className={styles.reportButtonConfirm}>
+          <div>
             <Button
               onClick={() => {
                 onConfirmReport();
                 setShowReport(false);
               }}
               variant="success"
+              className="w-full "
             >
               Confirm
             </Button>

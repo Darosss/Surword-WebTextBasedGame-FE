@@ -89,7 +89,7 @@ export type ReportTurn = {
 
 export type ReportTurnAction = {
   basicAttack: ReportTurnActionMove;
-  doubledAttack: ReportTurnActionMove;
+  doubledAttack?: ReportTurnActionMove;
 };
 
 export type ReportTurnActionMove = {

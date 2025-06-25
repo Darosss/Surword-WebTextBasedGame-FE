@@ -7,14 +7,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@radix-ui/react-accordion";
-import {
-  Users,
-  Shield,
-  Hourglass,
-  ScrollText,
-  Trophy,
-  Activity,
-} from "lucide-react";
+import { Users, Shield, ScrollText, Trophy, Activity } from "lucide-react";
 import { CombatTurnActions } from "./combat-turn-actions";
 import { PartyCarousel } from "./party-carousel";
 import { ResultsAndRewards } from "./results-and-rewards";

@@ -53,28 +53,31 @@ export const useFetch = <ResponseT, BodyT = unknown>(
   const [isPending, setIsPending] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = useCallback(async () => {
-    setIsPending(true);
-    return fetchBackendApi<ResponseT, BodyT>({
-      url,
-      body,
-      method,
-      notification,
-    })
-      .then((response) => {
-        if (!response) throw new Error("Data from server not found");
-        setResponseData(response.body);
-        setError(null);
-        return response.body;
+  const fetchData = useCallback(
+    async (params?: FetchDataParams<BodyT>) => {
+      setIsPending(true);
+      return fetchBackendApi<ResponseT, BodyT>({
+        url: params?.customUrl || url,
+        body: params?.customBody || params?.customBody,
+        method,
+        notification,
       })
-      .catch((error) => {
-        setError(`There is an error -> ${error}`);
-        return null;
-      })
-      .finally(() => {
-        setIsPending(false);
-      });
-  }, [body, method, notification, url]);
+        .then((response) => {
+          if (!response) throw new Error("Data from server not found");
+          setResponseData(response.body);
+          setError(null);
+          return response.body;
+        })
+        .catch((error) => {
+          setError(`There is an error -> ${error}`);
+          return null;
+        })
+        .finally(() => {
+          setIsPending(false);
+        });
+    },
+    [body, method, notification, url]
+  );
 
   const clearCache = useCallback(() => {
     setResponseData({ message: null, data: null });

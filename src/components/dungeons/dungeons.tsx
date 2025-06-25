@@ -31,7 +31,7 @@ export const Dungeons: FC = () => {
   }
 
   return (
-    <div className="min-h-[calc(100vh-10rem)] max-h-[calc(100vh-10rem)] overflow-hidden">
+    <div className="min-h-[calc(100vh-10rem)] overflow-hidden">
       <div>
         <h2 className="text-xl font-bold text-yellow-300 border-b border-gray-600 pb-3 mb-4">
           Current finished level: {currentLevel}

@@ -66,7 +66,7 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
   return (
     <div
       className={cn(
-        "relative p-3 sm:p-4 rounded-lg bg-gray-800/50 border overflow-y-auto min-h-[calc(100vh-10rem)] max-h-[calc(100vh-10rem)]"
+        "relative p-3 sm:p-4 rounded-lg bg-gray-800/50 border overflow-y-auto min-h-[calc(100vh-10rem)]"
       )}
     >
       {fightData && showReport ? (

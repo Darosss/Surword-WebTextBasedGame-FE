@@ -2,11 +2,9 @@
 
 import { useFetch } from "@/hooks/useFetch";
 import { FC, useEffect, useState } from "react";
-import styles from "./dungeons.module.scss";
 import { DungeonsResponse } from "./types";
-import { DungeonDetails } from "./dungeon-details";
-import { DungeonActions } from "./dungeon-actions";
 import { FetchingInfo } from "../common";
+import { DungeonsCarousel } from "./dunegons-carousel";
 
 export const Dungeons: FC = () => {
   const {
@@ -32,28 +30,19 @@ export const Dungeons: FC = () => {
     );
   }
 
-  const handleOnIncreaseCurrentLevel = () => {
-    setCurrentLevel((prevState) => Math.min(data.currentLevel, prevState + 1));
-  };
-  const handleOnDecreaseCurrentLevel = () => {
-    setCurrentLevel((prevState) => Math.max(1, prevState - 1));
-  };
-
   return (
-    <div className={styles.dungeonsWrapper}>
+    <div className="min-h-[calc(100vh-10rem)] max-h-[calc(100vh-10rem)] overflow-hidden">
       <div>
-        <h2>Current level: {currentLevel}</h2>
+        <h2 className="text-xl font-bold text-yellow-300 border-b border-gray-600 pb-3 mb-4">
+          Current finished level: {currentLevel}
+        </h2>
       </div>
 
-      <DungeonDetails
-        currentMaxLevel={data.currentLevel}
-        decreaseCurrentLevel={handleOnDecreaseCurrentLevel}
-        increaseCurrentLevel={handleOnIncreaseCurrentLevel}
-        data={data.completedDungeons.at(currentLevel - 1)}
-      />
-
-      <DungeonActions
-        dungeonLevel={currentLevel}
+      <DungeonsCarousel
+        currentLevel={data.currentLevel}
+        completed={[...data.completedDungeons].reverse()}
+        icon={"symbol"}
+        iconColor={""}
         canFightDate={new Date(data.canFightDate)}
         onConfirmReport={fetchData}
       />

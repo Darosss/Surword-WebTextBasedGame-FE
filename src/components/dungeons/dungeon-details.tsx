@@ -1,5 +1,4 @@
 import { FC } from "react";
-import styles from "./dungeons.module.scss";
 import { CompletedDungeons } from "./types";
 import { Button } from "../ui/button";
 
@@ -17,11 +16,11 @@ export const DungeonDetails: FC<DungeonDetailsProps> = ({
   data,
 }) => {
   return (
-    <div className={styles.dungeonDetails}>
-      <div className={styles.buttonNavigation}>
+    <div>
+      <div>
         <Button onClick={decreaseCurrentLevel}>{"<"}</Button>
       </div>
-      <div className={styles.choosenLevel}>
+      <div>
         {data ? (
           <>
             <div>Defeated dungeon. Level: {data.level}</div>
@@ -39,7 +38,7 @@ export const DungeonDetails: FC<DungeonDetailsProps> = ({
           </>
         )}
       </div>
-      <div className={styles.buttonNavigation}>
+      <div>
         <Button onClick={increaseCurrentLevel}>{">"}</Button>
       </div>
     </div>

@@ -1,45 +1,22 @@
 import { formatTime, getRemainingTimeFromDateToDate } from "@/utils/utils";
 import { FC, useEffect, useState } from "react";
-import { useFetch } from "@/hooks/useFetch";
-import { FightReportDisplay } from "@/components/fight-report";
-import { FightReportType } from "@/api/types";
-import { useAuthContext } from "@/components/auth";
 import { Button } from "../ui/button";
 
 type DungeonActionsProps = {
-  dungeonLevel: number;
   canFightDate: Date;
-  onConfirmReport: () => void;
+  onClickFight: () => void;
+  completed: boolean;
 };
 
-type StartAFightResponse = FightReportType;
-
 export const DungeonActions: FC<DungeonActionsProps> = ({
-  dungeonLevel,
+  completed,
   canFightDate,
-  onConfirmReport,
+  onClickFight,
 }) => {
   const [remainingTime, setRemainingTime] = useState(0);
-  const [showReport, setShowReport] = useState(false);
-  const {
-    api: {
-      isPending,
-      error,
-      responseData: { data },
-    },
-    fetchData,
-  } = useFetch<StartAFightResponse>(
-    {
-      url: `dungeons/start-a-fight/${dungeonLevel}`,
-      method: "POST",
-    },
-    { manual: true }
-  );
-  const {
-    apiUser: { fetchData: fetchUserData },
-  } = useAuthContext();
 
   useEffect(() => {
+    //TODO: move this out of this -> context / or somewhere
     const remainingTimeMs = getRemainingTimeFromDateToDate({
       timestamp: Date.now(),
       toTimestamp: Number(new Date(canFightDate.getTime()).getTime()),
@@ -59,36 +36,15 @@ export const DungeonActions: FC<DungeonActionsProps> = ({
     return () => clearInterval(intervalId);
   }, [canFightDate]);
 
-  useEffect(() => {
-    if (data) {
-      fetchUserData();
-      setShowReport(true);
-    }
-  }, [data, fetchUserData]);
-
   return (
     <div>
-      {data && showReport ? (
-        <div className="bg-transparent backdrop-blur-md absolute top-0 bottom-0 left-0 right-0">
-          <FightReportDisplay report={data} />
-
-          <div>
-            <Button
-              onClick={() => {
-                onConfirmReport();
-                setShowReport(false);
-              }}
-              variant="success"
-              className="w-full "
-            >
-              Confirm
-            </Button>
-          </div>
-        </div>
-      ) : remainingTime != 0 ? (
+      {remainingTime != 0 ? (
         formatTime(remainingTime)
       ) : (
-        <Button variant="destructive" onClick={() => fetchData()}>
+        <Button
+          variant={(completed && "warning") || "destructive"}
+          onClick={onClickFight}
+        >
           Fight
         </Button>
       )}

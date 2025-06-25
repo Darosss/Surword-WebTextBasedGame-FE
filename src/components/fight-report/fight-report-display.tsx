@@ -7,7 +7,14 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@radix-ui/react-accordion";
-import { Users, Shield, Hourglass, ScrollText, Trophy } from "lucide-react";
+import {
+  Users,
+  Shield,
+  Hourglass,
+  ScrollText,
+  Trophy,
+  Activity,
+} from "lucide-react";
 import { CombatTurnActions } from "./combat-turn-actions";
 import { PartyCarousel } from "./party-carousel";
 import { ResultsAndRewards } from "./results-and-rewards";
@@ -47,7 +54,7 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
           value="results"
           className="border border-gray-700/70 rounded-lg overflow-hidden bg-gray-800/30"
         >
-          <AccordionTrigger className="text-md sm:text-lg font-semibold text-gray-200 hover:no-underline hover:bg-gray-700/40 px-4 py-3">
+          <AccordionTrigger className="text-md sm:text-lg font-semibold text-gray-200 hover:no-underline hover:bg-gray-700/40 px-4 py-3 w-full hover:cursor-pointer">
             <div className="flex items-center">
               <Trophy className="h-5 w-5 mr-2.5 text-yellow-400" />
               Results & Rewards
@@ -66,9 +73,9 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
           value="participants"
           className="border border-gray-700/70 rounded-lg overflow-hidden bg-gray-800/30"
         >
-          <AccordionTrigger className="text-md sm:text-lg font-semibold text-gray-200 hover:no-underline hover:bg-gray-700/40 px-4 py-3">
+          <AccordionTrigger className="text-md sm:text-lg font-semibold text-gray-200 hover:no-underline hover:bg-gray-700/40 px-4 py-3 w-full hover:cursor-pointer">
             <div className="flex items-center">
-              <Hourglass className="h-5 w-5 mr-2.5 text-gray-400" />
+              <Users className="h-5 w-5 mr-2.5 text-gray-400" />
               Participants
             </div>
           </AccordionTrigger>
@@ -95,9 +102,9 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
           value="overview"
           className="border border-gray-700/70 rounded-lg overflow-hidden bg-gray-800/30"
         >
-          <AccordionTrigger className="text-md sm:text-lg font-semibold text-gray-200 hover:no-underline hover:bg-gray-700/40 px-4 py-3">
+          <AccordionTrigger className="text-md sm:text-lg font-semibold text-gray-200 hover:no-underline hover:bg-gray-700/40 px-4 py-3 w-full hover:cursor-pointer">
             <div className="flex items-center">
-              <Hourglass className="h-5 w-5 mr-2.5 text-gray-400" />
+              <Activity className="h-5 w-5 mr-2.5 text-gray-400" />
               Fight Overview
             </div>
           </AccordionTrigger>
@@ -112,7 +119,7 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
           value="combat-log"
           className="border border-gray-700/70 rounded-lg overflow-hidden bg-gray-800/30"
         >
-          <AccordionTrigger className="text-md sm:text-lg font-semibold text-gray-200 hover:no-underline hover:bg-gray-700/40 px-4 py-3">
+          <AccordionTrigger className="text-md sm:text-lg font-semibold text-gray-200 hover:no-underline hover:bg-gray-700/40 px-4 py-3 w-full hover:cursor-pointer">
             <div className="flex items-center">
               <ScrollText className="h-5 w-5 mr-2.5 text-gray-400" />
               Combat Log

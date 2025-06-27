@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Button } from "../ui/button";
 
 type ItemsHeaderFilterProps = {
   setFilter: Dispatch<SetStateAction<FilterType>>;
@@ -58,7 +59,7 @@ export const ItemsHeaderFilter: FC<ItemsHeaderFilterProps> = ({
         <SelectTrigger className="w-full sm:w-[160px] bg-gray-900/50 text-sm h-9">
           <SelectValue placeholder="Sort by..." />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[100]">
           {sortByKeys.map((key) => (
             <SelectItem key={key} value={key}>
               {key}
@@ -66,6 +67,17 @@ export const ItemsHeaderFilter: FC<ItemsHeaderFilterProps> = ({
           ))}
         </SelectContent>
       </Select>
+      <Button
+        variant={"outline"}
+        onClick={() => {
+          setSort((prevState) => ({
+            ...prevState,
+            descending: !prevState.descending,
+          }));
+        }}
+      >
+        {sort.descending ? "↓" : "↑"}
+      </Button>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useAuthContext } from "@/components/auth";
-import { Coins, Star, BarChartBig } from "lucide-react";
+import { Coins, Star, BarChartBig, Heart } from "lucide-react";
 
 export const UserDetails: FC = () => {
   const {
@@ -14,6 +14,7 @@ export const UserDetails: FC = () => {
 
   if (!username) return null;
   const xpPercentage = !hero ? 0 : (hero.experience / hero.neededExp) * 100;
+  const healthPercentage = !hero ? 0 : (hero.health / hero.maxHealth) * 100;
 
   return (
     <div className="p-4 space-y-4 border-b border-gray-700/50">
@@ -30,6 +31,20 @@ export const UserDetails: FC = () => {
             <Star className="h-4 w-4 text-blue-400" /> Level
           </span>
           <span>{hero?.level}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <Heart className="h-4 w-4 text-rose-400" /> Health
+          </span>
+          <span>
+            {hero?.health} / {hero?.maxHealth}
+          </span>
+        </div>
+        <div className="w-full bg-gray-700 rounded-full h-2.5">
+          <div
+            className="bg-gradient-to-r from-red-500 to-rose-400 h-2.5 rounded-full"
+            style={{ width: `${healthPercentage}%` }}
+          />
         </div>
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-2">

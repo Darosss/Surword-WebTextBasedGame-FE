@@ -12,37 +12,37 @@ export const rarityStyles: Record<ItemRarity, RarityStylesType> = {
   COMMON: {
     text: "text-gray-300",
     border: "border-gray-600",
-    bg: "bg-gray-800/50",
+    bg: "bg-gray-600/80",
   },
   UNCOMMON: {
     text: "text-green-400",
     border: "border-green-700",
-    bg: "bg-green-900/40",
+    bg: "bg-green-600/80",
   },
   RARE: {
     text: "text-blue-400",
     border: "border-blue-700",
-    bg: "bg-blue-900/40",
+    bg: "bg-blue-600/80",
   },
   VERY_RARE: {
     text: "text-purple-400",
     border: "border-purple-700",
-    bg: "bg-purple-900/40",
+    bg: "bg-purple-600/80",
   },
   EPIC: {
-    text: "text-orange-400",
-    border: "border-orange-600",
-    bg: "bg-orange-900/40",
+    text: "text-yellow-400",
+    border: "border-yellow-600",
+    bg: "bg-yellow-400/50",
   },
   LEGENDARY: {
     text: "text-orange-400",
     border: "border-orange-600",
-    bg: "bg-orange-900/40",
+    bg: "bg-orange-600/80",
   },
   MYTHIC: {
-    text: "text-yellow-400",
-    border: "border-yellow-600",
-    bg: "bg-yellow-900/40",
+    text: "text-rose-400",
+    border: "border-rose-600",
+    bg: "bg-rose-600/80",
   },
 };
 

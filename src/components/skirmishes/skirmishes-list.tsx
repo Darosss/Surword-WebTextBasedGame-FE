@@ -37,7 +37,7 @@ export const SkirmishesList: FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center h-full w-full justify-between relative">
+    <div className="flex flex-col items-center h-full w-full justify-between relative overflow-y-auto">
       <div className="flex flex-wrap gap-3 justify-center">
         <SkirmishesData challenges={data.challenges} onStart={fetchData} />
       </div>
@@ -115,9 +115,4 @@ const SkirmishesData = ({ challenges, onStart }: SkirmishesDataProps) => {
       </PopoverContent>
     </Popover>
   ));
-};
-
-type ChallengeDataActionProps = {
-  challangeId: string;
-  onStart: () => void;
 };

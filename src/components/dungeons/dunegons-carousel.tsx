@@ -66,12 +66,12 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
   return (
     <div
       className={cn(
-        "relative p-3 sm:p-4 rounded-lg bg-gray-800/50 border overflow-y-auto min-h-[calc(100vh-10rem)] flex flex-col justify-center"
+        "relative p-3 sm:p-4 sm:pt-0 rounded-lg bg-gray-800/50 border overflow-y-auto min-h-[calc(100vh-10rem)] flex flex-col justify-center"
       )}
     >
       {fightData && showReport ? (
         <div className="bg-transparent backdrop-blur-md absolute top-0 bottom-0 left-0 right-0 z-[100]">
-          <div>
+          <div className="sticky top-0 z-[101]">
             <Button
               onClick={() => {
                 onConfirmReport();

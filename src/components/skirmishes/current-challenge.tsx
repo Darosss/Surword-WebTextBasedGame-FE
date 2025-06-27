@@ -61,7 +61,7 @@ export const CurrentChallenge: FC<CurrentChallengeProps> = ({
     <div>
       {data && showReport ? (
         <div className="bg-transparent backdrop-blur-md absolute top-0 bottom-0 left-0 right-0 z-[100]">
-          <div>
+          <div className="sticky top-0 z-[101]">
             <Button
               onClick={() => {
                 onConfirmReport();

@@ -70,18 +70,19 @@ export const ItemDisplay: FC<ItemDisplayProps> = ({
               {costOptions ? (
                 <div
                   className={cn(
-                    "absolute flex justify-between rounded-sm p-1 bottom-1 right-1 z-[50] text-xs",
+                    "absolute flex justify-between rounded-sm p-1 bottom-1 right-1 z-[50] text-xs backdrop-blur-lg",
                     currentRarityStyles?.bg
                   )}
                 >
                   <span
                     className={cn(
-                      !costOptions.canAfford ? "text-danger" : "text-primary"
+                      "font-semibold",
+                      !costOptions.canAfford && "text-danger"
                     )}
                   >
                     {costOptions.value.toLocaleString()}
                   </span>
-                  <span className="text-warning">$</span>
+                  <span className="text-warning"> G</span>
                 </div>
               ) : null}
               <Image

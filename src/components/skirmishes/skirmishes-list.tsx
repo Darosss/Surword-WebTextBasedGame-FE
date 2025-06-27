@@ -8,6 +8,8 @@ import { Button } from "../ui/button";
 import { Popover, PopoverTrigger } from "../ui/popover";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { CurrentChallenge } from "./current-challenge";
+import { useAuthContext } from "../auth";
+import { toast } from "react-toastify";
 
 type SkirmishesResponse = {
   challenges: Record<string, ChallengeData>;
@@ -76,7 +78,25 @@ const SkirmishesData = ({ challenges, onStart }: SkirmishesDataProps) => {
     { manual: true }
   );
 
+  const {
+    apiUser: {
+      api: {
+        data: { heroDetails },
+      },
+    },
+  } = useAuthContext();
+
   const handleOnStartChallenge = (id: number) => {
+    if (!heroDetails) return;
+
+    const minHealthToStart = heroDetails.maxHealth * 0.1;
+    if (heroDetails.health <= minHealthToStart) {
+      return toast.info(
+        `You need at least ${
+          Math.round(minHealthToStart) + 1
+        }HP to start a fight!`
+      );
+    }
     fetchData({ customUrl: `start-challenge/${id}` }).then((data) => {
       if (data?.data) onStart();
     });

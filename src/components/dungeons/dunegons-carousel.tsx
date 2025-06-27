@@ -66,7 +66,7 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
   return (
     <div
       className={cn(
-        "relative p-3 sm:p-4 rounded-lg bg-gray-800/50 border overflow-y-auto min-h-[calc(100vh-10rem)]"
+        "relative p-3 sm:p-4 rounded-lg bg-gray-800/50 border overflow-y-auto min-h-[calc(100vh-10rem)] flex flex-col justify-center"
       )}
     >
       {fightData && showReport ? (
@@ -94,36 +94,31 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
       >
         <IconComponent className={cn("h-5 w-5 mr-2", iconColor)} />
       </h2>
-      <div className="grid grid-cols-1 gap-4 sm:gap-6 mb-6 sm:mb-8">
+      <div className="grid items-center grid-cols-1  sm:gap-6 mb-6 sm:mb-8">
+        {" "}
         {completed.length > 1 ? (
           <Carousel
             opts={{ align: "center", loop: completed.length > 3 }}
-            className="w-full max-w-full"
+            className="w-full max-w-full border border-b rounded-md p-4"
           >
-            <CarouselContent className="-ml-2 sm:-ml-3">
-              <CarouselItem className="pl-2 sm:pl-3 basis-1/2 md:basis-1/3 lg:basis-1/2 xl:basis-1/3">
+            <CarouselContent className="-ml-2 sm:-ml-3 py-2 px-6">
+              <CarouselItemContent
+                level={currentLevel}
+                fightData={fightData}
+                canFightDate={canFightDate}
+                onClickFight={handleStartAFight}
+                onConfirmReport={onConfirmReport}
+              />
+              {completed.map((completedDng) => (
                 <CarouselItemContent
-                  level={currentLevel}
+                  key={completedDng.finished + completedDng.level}
+                  level={completedDng.level}
+                  completed={new Date(completedDng.finished)}
                   fightData={fightData}
                   canFightDate={canFightDate}
                   onClickFight={handleStartAFight}
                   onConfirmReport={onConfirmReport}
                 />
-              </CarouselItem>
-              {completed.map((completedDng) => (
-                <CarouselItem
-                  key={completedDng.finished + completedDng.level}
-                  className="pl-2 sm:pl-3 basis-1/2 md:basis-1/3 lg:basis-1/2 xl:basis-1/3"
-                >
-                  <CarouselItemContent
-                    level={completedDng.level}
-                    completed={new Date(completedDng.finished)}
-                    fightData={fightData}
-                    canFightDate={canFightDate}
-                    onClickFight={handleStartAFight}
-                    onConfirmReport={onConfirmReport}
-                  />
-                </CarouselItem>
               ))}
             </CarouselContent>
             {completed.length >
@@ -158,7 +153,7 @@ const CarouselItemContent: FC<CarouselItemContentProps> = ({
   onClickFight,
 }) => {
   return (
-    <>
+    <CarouselItem className="border rounded-md p-4 pl-2 sm:pl-3 m-1 basis-1/2 md:basis-1/3 lg:basis-1/2 xl:basis-1/3">
       <div>
         {completed && `Defeated dungeon`} Level: {level}
       </div>
@@ -170,6 +165,6 @@ const CarouselItemContent: FC<CarouselItemContentProps> = ({
           onClickFight={() => onClickFight(level)}
         />
       </div>
-    </>
+    </CarouselItem>
   );
 };

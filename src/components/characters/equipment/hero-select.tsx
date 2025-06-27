@@ -43,7 +43,9 @@ export const HeroSelect: FC<HeroSelectProps> = ({
     <>
       {charactersIdsData?.map((id, index) => {
         const asCurrentChar =
-          currentCharacterId === id || charactersIdsData.length === 1;
+          (!currentCharacterId && index === 0) ||
+          currentCharacterId === id ||
+          charactersIdsData.length === 1;
         return (
           <Button
             key={id}

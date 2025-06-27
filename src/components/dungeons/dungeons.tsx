@@ -5,6 +5,7 @@ import { FC, useEffect, useState } from "react";
 import { DungeonsResponse } from "./types";
 import { FetchingInfo } from "../common";
 import { DungeonsCarousel } from "./dunegons-carousel";
+import { Castle } from "lucide-react";
 
 export const Dungeons: FC = () => {
   const {
@@ -41,7 +42,7 @@ export const Dungeons: FC = () => {
       <DungeonsCarousel
         currentLevel={data.currentLevel}
         completed={[...data.completedDungeons].reverse()}
-        icon={"symbol"}
+        icon={Castle}
         iconColor={""}
         canFightDate={new Date(data.canFightDate)}
         onConfirmReport={fetchData}

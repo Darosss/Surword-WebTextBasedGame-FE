@@ -1,15 +1,16 @@
 "use client";
 
-import styles from "./skirmishes-list.module.scss";
 import { useFetch } from "@/hooks/useFetch";
-import { CurrentChallenge } from "./current-challenge";
 import { ChallengeData, ChoosenChallange } from "./types";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { FetchingInfo } from "@/components/common";
 import { Button } from "../ui/button";
+import { Popover, PopoverTrigger } from "../ui/popover";
+import { PopoverContent } from "@radix-ui/react-popover";
+import { CurrentChallenge } from "./current-challenge";
 
 type SkirmishesResponse = {
-  challenges: { [id: string]: ChallengeData };
+  challenges: Record<string, ChallengeData>;
   challengeTimeCompleted: boolean;
   chosenChallenge?: ChoosenChallange;
   chosenChallengeData?: ChallengeData;
@@ -28,7 +29,7 @@ export const SkirmishesList: FC = () => {
     url: "your-skirmishes",
     method: "GET",
   });
-  const [choosenChallange, setChoosenChallenge] = useState("");
+
   if (!data || isPending || error) {
     return (
       <FetchingInfo isPending={isPending} error={error} refetch={fetchData} />
@@ -36,82 +37,30 @@ export const SkirmishesList: FC = () => {
   }
 
   return (
-    <div className={styles.skirmishesWrapper}>
-      <div className={styles.skirmishesList}>
-        {data.chosenChallenge && data.chosenChallengeData ? (
+    <div className="flex flex-col items-center h-full w-full justify-between relative">
+      <div className="flex flex-wrap gap-3 justify-center">
+        <SkirmishesData challenges={data.challenges} onStart={fetchData} />
+      </div>
+      {data.chosenChallenge && data.chosenChallengeData && (
+        <div className="absolute top-0 text-center bottom-0 left-0 right-0 backdrop-blur-lg w-full">
           <CurrentChallenge
             chosenChallenge={data.chosenChallenge}
             chosenChallengeData={data.chosenChallengeData}
             onConfirmReport={fetchData}
             onCancel={fetchData}
           />
-        ) : (
-          <>
-            <div className={styles.skirmishDataWrapper}>
-              {Object.entries(data.challenges).map((value) => (
-                <SkirmishesData
-                  key={value[0]}
-                  data={value}
-                  onChoose={(id) => setChoosenChallenge(id)}
-                  choosen={choosenChallange === value[0]}
-                />
-              ))}
-            </div>
-            <div className={styles.challengeDataActionWrapper}>
-              {choosenChallange ? (
-                <ChallengeDataAction
-                  challangeId={choosenChallange}
-                  onStart={() => {
-                    fetchData();
-                    setChoosenChallenge("");
-                  }}
-                />
-              ) : null}
-            </div>
-          </>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
 
 type SkirmishesDataProps = {
-  data: [string, ChallengeData];
-  onChoose: (id: string) => void;
-  choosen?: boolean;
-};
-
-const SkirmishesData = ({
-  data: [id, value],
-  onChoose,
-  choosen,
-}: SkirmishesDataProps) => {
-  return (
-    <>
-      <div
-        className={`${styles.skirmishChallenges} ${
-          choosen ? styles.choosen : ""
-        }`}
-        onClick={() => onChoose(id)}
-      >
-        <div>{value.name}</div>
-        <div>
-          <span>({value.difficulty})</span>
-        </div>
-      </div>
-    </>
-  );
-};
-
-type ChallengeDataActionProps = {
-  challangeId: string;
+  challenges: SkirmishesResponse["challenges"];
   onStart: () => void;
 };
 
-const ChallengeDataAction = ({
-  challangeId,
-  onStart,
-}: ChallengeDataActionProps) => {
+const SkirmishesData = ({ challenges, onStart }: SkirmishesDataProps) => {
   const {
     api: {
       isPending,
@@ -121,25 +70,54 @@ const ChallengeDataAction = ({
     fetchData,
   } = useFetch<String>(
     {
-      url: `start-challenge/${challangeId}`,
+      url: `start-challenge/`,
       method: "POST",
     },
     { manual: true }
   );
 
-  useEffect(() => {
-    if (data) onStart();
-  }, [data, onStart]);
+  const handleOnStartChallenge = (id: number) => {
+    fetchData({ customUrl: `start-challenge/${id}` }).then((data) => {
+      if (data?.data) onStart();
+    });
+  };
+  return Object.entries(challenges).map(([id, value]) => (
+    <Popover key={id}>
+      <PopoverTrigger asChild>
+        <div className="flex flex-col w-64">
+          <Button className="flex flex-col h-full">
+            {value.name}
+            <span className="p-2 bg-warning rounded-md text-warning text-center">
+              {" "}
+              {value.difficulty}
+            </span>
+          </Button>
+        </div>
+      </PopoverTrigger>
 
-  return (
-    <div className={styles.challengeDataAction}>
-      <div>TODO: if backend will have desc. soon description :P </div>
+      <PopoverContent>
+        <div className="backdrop-blur-lg w-xl rounded-md border bg-gradient-to-br from-blue-900 to-gray-900 p-6">
+          <h2 className="text-2xl font-bold text-yellow-300 border-b border-gray-600 pb-3 mb-4">
+            {value.name}
+          </h2>
+          <div className="text-lg font-bold text-yellow-300 border-b border-gray-600 pb-3 mb-4">
+            Description...(soon)
+          </div>
 
-      <div className={styles.challengeActions}>
-        <Button onClick={() => fetchData()} variant="success">
-          Start
-        </Button>
-      </div>
-    </div>
-  );
+          <Button
+            variant="warning"
+            onClick={() => handleOnStartChallenge(parseInt(id, 10))}
+          >
+            {" "}
+            Start{" "}
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+  ));
+};
+
+type ChallengeDataActionProps = {
+  challangeId: string;
+  onStart: () => void;
 };

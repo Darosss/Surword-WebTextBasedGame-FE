@@ -1,6 +1,5 @@
-import { FC, useEffect } from "react";
-import styles from "./current-challenge.module.scss";
-import { ChallengeData, ChoosenChallange } from "../types";
+import { FC, useEffect, useState } from "react";
+import { ChallengeData, ChoosenChallange } from "./types";
 import { formatTime } from "@/utils/utils";
 import { useFetch } from "@/hooks/useFetch";
 import { Button } from "@/components/ui/button";
@@ -25,6 +24,7 @@ export const CurrentChallenge: FC<CurrentChallengeProps> = ({
   onConfirmReport,
   onCancel,
 }) => {
+  const [showReport, setShowReport] = useState(false);
   const {
     api: {
       isPending,
@@ -52,37 +52,45 @@ export const CurrentChallenge: FC<CurrentChallengeProps> = ({
   }, [fetchData, remainingTime]);
 
   useEffect(() => {
-    if (data) fetchUserData();
+    if (data) {
+      setShowReport(true);
+    }
   }, [data, fetchUserData]);
 
   return (
-    <div className={styles.currentChallengeWrapper}>
-      {data ? (
-        <div className={styles.reportDisplayWrapper}>
-          <FightReportDisplay report={data} />
-
-          <div className={styles.reportButtonConfirm}>
-            <Button onClick={onConfirmReport} variant="success">
+    <div>
+      {data && showReport ? (
+        <div className="bg-transparent backdrop-blur-md absolute top-0 bottom-0 left-0 right-0 z-[100]">
+          <div>
+            <Button
+              onClick={() => {
+                onConfirmReport();
+                fetchUserData();
+                setShowReport(false);
+              }}
+              variant="success"
+              className="w-full "
+            >
               Confirm
             </Button>
           </div>
+          <FightReportDisplay report={data} />
         </div>
       ) : (
-        <div className={styles.skirmishCountdown}>
+        <div>
           <div>
-            <div>{chosenChallengeData.name}</div>
-            <div>
-              <span>
-                {"("}
-                {chosenChallengeData.difficulty}
-                {")"}
-              </span>
-            </div>
-          </div>
-          <div>
-            <div>{formatTime(remainingTime)}</div>
-          </div>
-          <div>
+            <h2 className="text-2xl font-bold text-yellow-300 border-b border-gray-600 pb-3 mb-4">
+              {chosenChallengeData.name}
+            </h2>
+            <h3 className="text-lg font-bold text-yellow-300 border-b border-gray-600 pb-3 mb-4">
+              {"("}
+              {chosenChallengeData.difficulty}
+              {")"}
+            </h3>
+
+            <h3 className="text-lg font-bold text-yellow-300 border-b border-gray-600 pb-3 mb-4">
+              {formatTime(remainingTime)}
+            </h3>
             <CancelCurrentChallengeButton onCancel={onCancel} />
           </div>
         </div>

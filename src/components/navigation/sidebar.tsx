@@ -99,10 +99,10 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
     <>
       <aside
         className={cn(
-          "fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-primary to-secondary md: border-r border-gray-700/50 z-[101] transition-transform duration-300 ease-in-out",
-          "flex flex-col md:header-size",
+          "fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-primary to-secondary md:border-r border-gray-700/50 z-[101] transition-transform duration-300 ease-in-out",
+          "flex flex-col lg:header-size",
           isOpen ? "translate-x-0" : "-translate-x-full",
-          "md:translate-x-0"
+          "lg:translate-x-0"
         )}
       >
         <div className="flex items-center justify-between p-4 border-b border-gray-700/50">

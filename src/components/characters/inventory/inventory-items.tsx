@@ -114,7 +114,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
       <ScrollArea className="flex-grow min-h-[calc(100dvh-20rem)] ">
         <div className={cn(className)} ref={dropRef}>
           <div
-            className={`grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-6 md:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5 gap-2 pr-2`}
+            className={`grid grid-cols-6 xs:grid-cols-5 sm:grid-cols-7 md:grid-cols-10 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 pr-2`}
           >
             {paginatedItems.map(([_, item]) => (
               <div key={item.id}>

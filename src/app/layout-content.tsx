@@ -17,7 +17,7 @@ export const LayoutContent: FC<LayoutContentProps> = ({ children }) => {
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <MobileHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
         <ToastContainer />
-        <div className="w-full h-screen flex grow md:ml-[20dvw] ml-0 z-[100] pb-1 pr-1">
+        <div className="w-full h-screen flex grow lg:ml-[20dvw] ml-0 z-[100] pb-1 pr-1">
           {children}
         </div>
       </AuthContextProvider>

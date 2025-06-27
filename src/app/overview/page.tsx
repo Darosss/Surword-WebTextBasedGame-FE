@@ -19,13 +19,13 @@ export default function OverviewPage() {
       <CharacterManagementContextProvider>
         <InventoryControlContextProvider>
           <InventoryManagementContextProvider>
-            <main className="flex flex-col lg:flex-row gap-4 min-h-[calc(100vh-10rem)]">
+            <main className="flex flex-col lg:flex-row gap-4 min-h-[calc(100vh-10rem)] lg:w-full">
               <div className="lg:w-[30dvw] lg:flex-shrink-0">
                 <CharacterDisplay />
               </div>
 
               <MerchantContextProvider>
-                <div className="flex-grow min-w-0 w-[20dvw]">
+                <div className="flex-grow min-w-0 w-full lg:w-[20dvw]">
                   <Inventory />
                 </div>
                 <div className="lg:w-[420px] lg:flex-shrink-0">

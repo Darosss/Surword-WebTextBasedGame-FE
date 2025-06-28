@@ -2,9 +2,9 @@
 
 import Cookies from "js-cookie";
 import { FC, createContext, useContext, useEffect, useState } from "react";
-import { ApiDataNotNullable, COOKIE_TOKEN_NAME } from "@/api/fetch";
+import { ApiResponseBody, COOKIE_TOKEN_NAME } from "@/api/fetch";
 import { User } from "@/api/types";
-import { UseFetchReturnType, useFetch } from "@/hooks/useFetch";
+import { useFetch } from "@/hooks/useFetch";
 
 export type HeroDetailsType = {
   health: number;
@@ -18,53 +18,44 @@ type ProfileResponseType = {
   user: User;
   heroDetails: HeroDetailsType | null;
 };
-type ApiUser = ApiDataNotNullable<ProfileResponseType>;
 
-type ApiStateType<ApiData, FetchResponseData, FetchBodyData = unknown> = {
-  api: ApiData;
-  fetchData: UseFetchReturnType<FetchResponseData, FetchBodyData>["fetchData"];
-};
-
-type ApiUserType = ApiStateType<ApiUser, ProfileResponseType>;
+type ProfileUser = ProfileResponseType["user"];
+type ProfileHeroDetails = ProfileResponseType["heroDetails"];
 
 type AuthContextType = {
   isLoggedIn: boolean;
   setIsLoggedIn: (value: boolean) => void;
-  apiUser: ApiUserType;
+  user: ProfileUser;
+  heroDetails: ProfileHeroDetails;
+  updateHeroDetails: (update: Partial<ProfileHeroDetails>) => void;
+  updateUserDetails: (update: Partial<ProfileUser>) => void;
+  fetchProfile: () => Promise<ApiResponseBody<ProfileResponseType> | null>;
 };
 
 type AuthContextProps = {
   children: React.ReactNode;
 };
 
-const defaultApiUserData: ApiUser = {
-  data: {
-    user: {
-      id: "",
-      username: "",
-      email: "",
-      roles: [],
-      lastLogin: new Date().toISOString(),
-      gold: 0,
-    },
-    heroDetails: {
-      level: 0,
-      experience: 0,
-      neededExp: 0,
-      health: 0,
-      maxHealth: 0,
-    },
-  },
-  message: "",
+const defaultUserData: ProfileUser = {
+  id: "",
+  username: "",
+  email: "",
+  roles: [],
+  lastLogin: new Date().toISOString(),
+  gold: 0,
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider: FC<AuthContextProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [user, setUser] = useState<ProfileUser>(defaultUserData);
+  const [heroDetails, setHeroDetails] = useState<ProfileHeroDetails>(null);
+
   const {
-    api: userApi,
-    fetchData: fetchUserData,
+    api: userApiResponse,
+    fetchData: fetchProfile,
     clearCache,
   } = useFetch<ProfileResponseType>(
     {
@@ -78,20 +69,33 @@ export const AuthContextProvider: FC<AuthContextProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    isLoggedIn ? fetchUserData() : clearCache();
-  }, [clearCache, fetchUserData, isLoggedIn]);
+    const responseData = userApiResponse.responseData;
+    const { data } = responseData || {};
+
+    if (data?.user) setUser(data.user);
+    if (data?.heroDetails) setHeroDetails(data.heroDetails);
+  }, [userApiResponse.responseData]);
+
+  const updateHeroDetails = (update: Partial<ProfileHeroDetails>) => {
+    setHeroDetails((prevState) => prevState && { ...prevState, ...update });
+  };
+  const updateUserDetails = (update: Partial<ProfileUser>) => {
+    setUser((prevState) => ({ ...prevState, ...update }));
+  };
+
+  useEffect(() => {
+    isLoggedIn ? fetchProfile() : clearCache();
+  }, [clearCache, fetchProfile, isLoggedIn]);
   return (
     <AuthContext.Provider
       value={{
         isLoggedIn,
         setIsLoggedIn,
-        //Note: temporary solution
-        apiUser: {
-          api: userApi.responseData.data
-            ? (userApi.responseData as ApiUser)
-            : defaultApiUserData,
-          fetchData: fetchUserData,
-        },
+        user,
+        heroDetails,
+        updateHeroDetails,
+        updateUserDetails,
+        fetchProfile,
       }}
     >
       {children}

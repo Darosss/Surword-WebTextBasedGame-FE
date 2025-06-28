@@ -1,6 +1,6 @@
 "use client";
 
-import { InventoryItemType, ItemsCostType } from "@/api/types";
+import { ItemsCostType } from "@/api/types";
 import React, { FC, useMemo, useState } from "react";
 import { filterItemsEntries, getSortedItems } from "@/components/items";
 import type { FilterType, SortType } from "@/components/items";
@@ -58,12 +58,9 @@ export const Merchant: FC = () => {
   } = useMerchantContext();
 
   const {
-    apiUser: {
-      api: { data: userData },
-      fetchData: fetchUserData,
-    },
+    user: { gold },
+    fetchProfile,
   } = useAuthContext();
-
   const { fetchData: fetchInventoryData } = useInventoryManagementContext();
 
   const [filter, setFilter] = useState<FilterType>({
@@ -85,8 +82,7 @@ export const Merchant: FC = () => {
   );
 
   const handleOnBuyItem = (id: string, cost: number) => {
-    if (userData.user.gold < cost)
-      return toast.error("You do not have enough gold");
+    if (gold < cost) return toast.error("You do not have enough gold");
     fetchBackendApi({
       url: `merchants/buy-item/${id}`,
       method: "POST",
@@ -95,7 +91,7 @@ export const Merchant: FC = () => {
       if (response?.body.data) {
         fetchMerchantData();
         fetchInventoryData();
-        fetchUserData();
+        fetchProfile();
       }
     });
   };
@@ -119,7 +115,7 @@ export const Merchant: FC = () => {
         </h3>
         <div className="flex items-center gap-2 text-yellow-400">
           <Coins className="h-5 w-5" />
-          <span>Your Gold: {userData.user.gold.toLocaleString()}</span>{" "}
+          <span>Your Gold: {gold.toLocaleString()}</span>{" "}
           {/* Placeholder, get from auth context */}
         </div>
       </div>
@@ -151,7 +147,7 @@ export const Merchant: FC = () => {
                 key={value[0]}
                 itemData={{ item: value[1], cost: itemCost }}
                 onItemBuy={handleOnBuyItem}
-                currentGold={userData.user.gold}
+                currentGold={gold}
               />
             );
           })}

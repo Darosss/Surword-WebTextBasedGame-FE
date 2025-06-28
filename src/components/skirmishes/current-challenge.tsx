@@ -39,9 +39,7 @@ export const CurrentChallenge: FC<CurrentChallengeProps> = ({
     },
     { manual: true }
   );
-  const {
-    apiUser: { fetchData: fetchUserData },
-  } = useAuthContext();
+  const { fetchProfile } = useAuthContext();
 
   const remainingTime = useCountdownTimer({
     toTimestamp: chosenChallenge.timestamp,
@@ -55,7 +53,7 @@ export const CurrentChallenge: FC<CurrentChallengeProps> = ({
     if (data) {
       setShowReport(true);
     }
-  }, [data, fetchUserData]);
+  }, [data]);
 
   return (
     <div>
@@ -65,7 +63,7 @@ export const CurrentChallenge: FC<CurrentChallengeProps> = ({
             <Button
               onClick={() => {
                 onConfirmReport();
-                fetchUserData();
+                fetchProfile();
                 setShowReport(false);
               }}
               variant="success"

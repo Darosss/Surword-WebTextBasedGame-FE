@@ -33,6 +33,8 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
   dropRef,
   className,
 }) => {
+  const { fetchProfile } = useAuthContext();
+
   const { filter, sort } = useInventoryControlContext();
   const { fetchData: fetchCharacterData } = useCharacterManagementContext();
   const { fetchData: fetchInventoryData } = useInventoryManagementContext();
@@ -40,10 +42,6 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
   const {
     apiMerchant: { fetchData: fetchMerchantData },
   } = useMerchantContext();
-
-  const {
-    apiUser: { fetchData: fetchUserData },
-  } = useAuthContext();
 
   const itemsToRender = useMemo(
     () =>
@@ -58,7 +56,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
     pagesCount,
   } = usePagination(itemsToRender, PAGE_SIZE);
 
-  const handleOnItemConusme = (itemId: string) => {
+  const handleOnItemConsume = (itemId: string) => {
     fetchBackendApi<boolean>({
       url: `characters/use-consumable/${itemId}`,
       method: "POST",
@@ -66,7 +64,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
     }).then(() => {
       fetchCharacterData();
       fetchInventoryData();
-      fetchUserData();
+      fetchProfile();
     });
   };
 
@@ -104,7 +102,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
     }).then((response) => {
       if (response?.body.data) {
         fetchInventoryData();
-        fetchUserData();
+        fetchProfile();
         fetchMerchantData();
       }
     });
@@ -123,7 +121,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
                   onItemEquip={(characterId, itemId, slot) =>
                     handleOnItemEquip(characterId, itemId, slot)
                   }
-                  onItemConsume={(itemId) => handleOnItemConusme(itemId)}
+                  onItemConsume={(itemId) => handleOnItemConsume(itemId)}
                   onMercenaryWear={(characterId, itemId) =>
                     handleOnMercenaryWear(characterId, itemId)
                   }

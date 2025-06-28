@@ -48,9 +48,7 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
     { manual: true }
   );
 
-  const {
-    apiUser: { fetchData: fetchUserData },
-  } = useAuthContext();
+  const { fetchProfile } = useAuthContext();
 
   useEffect(() => {
     if (!fightData) setShowReport(false);
@@ -75,7 +73,7 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
             <Button
               onClick={() => {
                 onConfirmReport();
-                fetchUserData();
+                fetchProfile();
                 setShowReport(false);
               }}
               variant="success"

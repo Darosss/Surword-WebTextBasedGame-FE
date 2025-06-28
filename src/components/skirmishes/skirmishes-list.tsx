@@ -78,13 +78,7 @@ const SkirmishesData = ({ challenges, onStart }: SkirmishesDataProps) => {
     { manual: true }
   );
 
-  const {
-    apiUser: {
-      api: {
-        data: { heroDetails },
-      },
-    },
-  } = useAuthContext();
+  const { heroDetails } = useAuthContext();
 
   const handleOnStartChallenge = (id: number) => {
     if (!heroDetails) return;

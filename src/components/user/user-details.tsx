@@ -4,13 +4,9 @@ import { Coins, Star, BarChartBig, Heart } from "lucide-react";
 
 export const UserDetails: FC = () => {
   const {
-    apiUser: { api },
-  } = useAuthContext();
-
-  const {
     user: { username, gold },
     heroDetails: hero,
-  } = api.data;
+  } = useAuthContext();
 
   if (!username) return null;
   const xpPercentage = !hero ? 0 : (hero.experience / hero.neededExp) * 100;

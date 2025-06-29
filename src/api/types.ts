@@ -191,9 +191,9 @@ export type InventoryItems = {
   [id: string]: InventoryItemType;
 };
 
-export type EquipResponseType = Item;
+export type EquipResponseType = InventoryItemType;
 
-export type UnEquipResponseType = Item;
+export type UnEquipResponseType = InventoryItemType;
 
 export type UseConsumableItem = {
   newHealth?: number;

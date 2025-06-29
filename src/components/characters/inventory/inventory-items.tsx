@@ -1,6 +1,7 @@
 import {
   InventoryItems as InventoryItemsType,
   EquipResponseType,
+  UseConsumableItem,
 } from "@/api/types";
 import { FC, Ref, useMemo } from "react";
 import { CharacterEquipmentFields } from "@/api/enums";
@@ -33,10 +34,11 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
   dropRef,
   className,
 }) => {
-  const { fetchProfile } = useAuthContext();
+  const { updateHeroDetails, fetchProfile } = useAuthContext();
 
   const { filter, sort } = useInventoryControlContext();
-  const { setCurrentCharacterId } = useCharacterManagementContext();
+  const { setCurrentCharacterId, updateCharacter } =
+    useCharacterManagementContext();
   const { fetchData: fetchInventoryData } = useInventoryManagementContext();
 
   const {
@@ -57,12 +59,15 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
   } = usePagination(itemsToRender, PAGE_SIZE);
 
   const handleOnItemConsume = (itemId: string) => {
-    fetchBackendApi<boolean>({
+    fetchBackendApi<UseConsumableItem>({
       url: `characters/use-consumable/${itemId}`,
       method: "POST",
       notification: { pendingText: "Trying to use consumable item...." },
-    }).then(() => {
-      fetchProfile();
+    }).then((response) => {
+      const newHealth = response.body.data?.newHealth;
+      if (!newHealth) return;
+      updateHeroDetails({ health: newHealth });
+      updateCharacter({ update: { health: newHealth } });
       fetchInventoryData();
     });
   };

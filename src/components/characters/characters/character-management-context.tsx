@@ -1,9 +1,8 @@
 "use client";
 import {
-  Dispatch,
   FC,
-  SetStateAction,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -12,20 +11,21 @@ import { useFetch } from "@/hooks/useFetch";
 import { CharacterTypesAlias } from "@/api/types";
 import { CharacterCreator } from "../creator";
 import { FetchingInfo } from "@/components/common";
-import { ApiCharacterState, ApiCharacterFetchData } from "./types";
+export type ApiCharacterState = Map<string, CharacterTypesAlias>;
 
 type CharacterManagementContextType = {
-  api: ApiCharacterState;
-  fetchData: ApiCharacterFetchData;
-  currentCharacterIdState: [
-    string | null,
-    Dispatch<SetStateAction<string | null>>
-  ];
+  characters: ApiCharacterState;
+  getCurrentSelectedCharacter: () => CharacterTypesAlias | null;
+  currentCharacterId: string | null;
+  setCurrentCharacterId: (id?: string, ignoreCache?: boolean) => void;
 };
 
 type CharacterManagementContextProps = {
   children: React.ReactNode;
 };
+
+const getFetchUrlHelper = (charId: string | null) =>
+  `${!charId ? "characters/your-main-character" : `characters/${charId}`}`;
 
 export const CharacterManagementContext =
   createContext<CharacterManagementContextType | null>(null);
@@ -33,27 +33,56 @@ export const CharacterManagementContext =
 export const CharacterManagementContextProvider: FC<
   CharacterManagementContextProps
 > = ({ children }) => {
-  const [currentCharacterId, setCurrentCharacterId] = useState<string | null>(
-    null
-  );
+  const [characters, setCharacters] = useState<ApiCharacterState>(new Map());
+
+  const [currentCharacterId, setCurrentCharacterIdState] = useState<
+    string | null
+  >(null);
   const {
     api: { error, isPending, responseData },
     fetchData: fetchCharacterData,
   } = useFetch<CharacterTypesAlias>(
     {
-      url: `${
-        !currentCharacterId
-          ? "characters/your-main-character"
-          : `characters/${currentCharacterId}`
-      }`,
+      url: getFetchUrlHelper(currentCharacterId),
       method: "GET",
     },
-    { manual: currentCharacterId ? true : false }
+    { manual: true }
+  );
+  const getCurrentSelectedCharacter = () => {
+    if (!currentCharacterId) return characters.values().next().value || null;
+    else if (currentCharacterId)
+      return characters.get(currentCharacterId) || null;
+    return null;
+  };
+
+  const setCurrentCharacterId = useCallback(
+    (id?: string, ignoreCache?: boolean) => {
+      const currId = id || null;
+      setCurrentCharacterIdState(currId);
+
+      if (!ignoreCache && currId && characters.has(currId)) return;
+
+      fetchCharacterData({
+        customUrl: getFetchUrlHelper(currId),
+      }).then((data) => {
+        const responseData = data?.data;
+        if (!responseData) return;
+
+        setCharacters((prevState) => {
+          const newMap = new Map(prevState);
+          newMap.set(responseData.id, responseData);
+
+          return newMap;
+        });
+      });
+    },
+    [characters, fetchCharacterData]
   );
 
   useEffect(() => {
-    if (currentCharacterId) fetchCharacterData();
-  }, [currentCharacterId, fetchCharacterData]);
+    setCurrentCharacterId();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (
     isPending === null ||
@@ -72,9 +101,10 @@ export const CharacterManagementContextProvider: FC<
   return (
     <CharacterManagementContext.Provider
       value={{
-        api: responseData as ApiCharacterState,
-        fetchData: fetchCharacterData,
-        currentCharacterIdState: [currentCharacterId, setCurrentCharacterId],
+        getCurrentSelectedCharacter,
+        characters,
+        currentCharacterId,
+        setCurrentCharacterId,
       }}
     >
       {responseData.data ? children : <CharacterCreator />}

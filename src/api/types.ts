@@ -203,6 +203,9 @@ export type ItemsCostType = {
   [id: string]: number;
 };
 
+export type SellItemResponseType = InventoryItemType;
+export type BuyItemResponseType = InventoryItemType;
+
 export type YourMerchantResponseData = {
   commodityRefreshAt: string;
   id: string;

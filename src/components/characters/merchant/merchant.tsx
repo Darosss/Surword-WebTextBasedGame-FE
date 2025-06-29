@@ -50,12 +50,8 @@ export const Merchant: FC = () => {
     ["any"]
   );
 
-  const {
-    apiMerchant: {
-      api: { responseData, isPending, error },
-      fetchData: fetchMerchantData,
-    },
-  } = useMerchantContext();
+  const { manageMerchantItems, items, commodityRefreshAt, itemsCost } =
+    useMerchantContext();
 
   const {
     user: { gold },
@@ -73,12 +69,8 @@ export const Merchant: FC = () => {
   });
 
   const itemsToRender = useMemo(
-    () =>
-      getSortedItems(
-        filterItemsEntries(responseData.data?.items || {}, filter),
-        sort
-      ),
-    [filter, sort, responseData.data?.items]
+    () => getSortedItems(filterItemsEntries(items || {}, filter), sort),
+    [filter, sort, items]
   );
 
   const handleOnBuyItem = (id: string, cost: number) => {
@@ -89,22 +81,13 @@ export const Merchant: FC = () => {
       notification: { pendingText: "Trying to buy item" },
     }).then((response) => {
       if (response?.body.data) {
-        fetchMerchantData();
+        manageMerchantItems({ type: "buy", id: response.body.data.id });
+
         manageInventoryItems({ type: "add", item: response.body.data });
         fetchProfile();
       }
     });
   };
-
-  if (isPending === null || error || !responseData.data) {
-    return (
-      <FetchingInfo
-        isPending={isPending}
-        error={error}
-        refetch={fetchMerchantData}
-      />
-    );
-  }
 
   const isActive = canDrop && isOver;
   return (
@@ -120,9 +103,7 @@ export const Merchant: FC = () => {
         </div>
       </div>
       <div className="flex items-center gap-2 text-yellow-400">
-        <MerchantCommodityTimer
-          commodityRefreshAt={responseData.data.commodityRefreshAt}
-        />
+        <MerchantCommodityTimer commodityRefreshAt={commodityRefreshAt} />
       </div>
       <ItemsHeaderFilter setFilter={setFilter} sort={sort} setSort={setSort} />
       <ItemsSidebarFilter setFilter={setFilter} filter={filter} />
@@ -137,10 +118,7 @@ export const Merchant: FC = () => {
         >
           {itemsToRender?.map((value) => {
             const itemCost =
-              findCostForItem(
-                responseData.data?.itemsCost || {},
-                value[0]
-              )?.[1] || -1;
+              findCostForItem(itemsCost || {}, value[0])?.[1] || -1;
 
             return (
               <MerchantItem

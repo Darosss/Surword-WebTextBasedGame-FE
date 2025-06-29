@@ -2,6 +2,7 @@ import {
   InventoryItems as InventoryItemsType,
   EquipResponseType,
   UseConsumableItem,
+  SellItemResponseType,
 } from "@/api/types";
 import { FC, Ref, useMemo } from "react";
 import { CharacterEquipmentFields } from "@/api/enums";
@@ -41,9 +42,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
     useCharacterManagementContext();
   const { manageInventoryItems } = useInventoryManagementContext();
 
-  const {
-    apiMerchant: { fetchData: fetchMerchantData },
-  } = useMerchantContext();
+  const { manageMerchantItems } = useMerchantContext();
 
   const itemsToRender = useMemo(
     () =>
@@ -99,15 +98,15 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
   };
 
   const handleOnSellItem = (id: string) => {
-    fetchBackendApi({
+    fetchBackendApi<SellItemResponseType>({
       url: `merchants/sell-item/${id}`,
       method: "POST",
       notification: { pendingText: "Trying to sell item" },
     }).then((response) => {
       if (response?.body.data) {
         manageInventoryItems({ type: "remove", id });
+        manageMerchantItems({ type: "sell", item: response.body.data });
         fetchProfile();
-        fetchMerchantData();
       }
     });
   };

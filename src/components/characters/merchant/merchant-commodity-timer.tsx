@@ -16,15 +16,13 @@ export const MerchantCommodityTimer: FC<MerchantCommodityTimerProps> = ({
     toTimestamp: commodityRefreshAt,
   });
 
-  const {
-    apiMerchant: { fetchData },
-  } = useMerchantContext();
+  const { refetchMerchantItems } = useMerchantContext();
 
   useEffect(() => {
     if (commodityRemainingTime === 0) {
-      fetchData();
+      refetchMerchantItems();
     }
-  }, [fetchData, commodityRemainingTime]);
+  }, [refetchMerchantItems, commodityRemainingTime]);
 
   return (
     <div className="w-full flex justify-between items-center">

@@ -8,16 +8,30 @@ import {
   useState,
 } from "react";
 import { useFetch } from "@/hooks/useFetch";
-import { CharacterTypesAlias } from "@/api/types";
+import {
+  CharacterTypesAlias,
+  MainCharacter,
+  MercenaryCharacter,
+} from "@/api/types";
 import { CharacterCreator } from "../creator";
 import { FetchingInfo } from "@/components/common";
+import { isMercenaryCharacter } from "@/api/utils";
 export type ApiCharacterState = Map<string, CharacterTypesAlias>;
+type UpdateCharacterParams =
+  | {
+      update: Partial<MainCharacter>;
+    }
+  | {
+      id: string;
+      update: Partial<MercenaryCharacter>;
+    };
 
 type CharacterManagementContextType = {
   characters: ApiCharacterState;
   getCurrentSelectedCharacter: () => CharacterTypesAlias | null;
   currentCharacterId: string | null;
   setCurrentCharacterId: (id?: string, ignoreCache?: boolean) => void;
+  updateCharacter: (params: UpdateCharacterParams) => void;
 };
 
 type CharacterManagementContextProps = {
@@ -79,6 +93,34 @@ export const CharacterManagementContextProvider: FC<
     [characters, fetchCharacterData]
   );
 
+  const updateCharacter = (params: UpdateCharacterParams) => {
+    if ("id" in params) {
+      const { id, update } = params;
+      if (!characters.has(id)) return;
+      setCharacters((prevState) => {
+        const newMap = new Map(prevState);
+
+        newMap.set(id, { ...newMap.get(id)!, ...update });
+
+        return newMap;
+      });
+    } else {
+      const { update } = params;
+
+      setCharacters((prevState) => {
+        const newMap = new Map(prevState);
+
+        for (const [id, value] of newMap.entries()) {
+          if (!isMercenaryCharacter(value)) {
+            newMap.set(id, { ...newMap.get(id)!, ...update });
+            break;
+          }
+        }
+        return newMap;
+      });
+    }
+  };
+
   useEffect(() => {
     setCurrentCharacterId();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -105,6 +147,7 @@ export const CharacterManagementContextProvider: FC<
         characters,
         currentCharacterId,
         setCurrentCharacterId,
+        updateCharacter,
       }}
     >
       {responseData.data ? children : <CharacterCreator />}

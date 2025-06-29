@@ -36,7 +36,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
   const { fetchProfile } = useAuthContext();
 
   const { filter, sort } = useInventoryControlContext();
-  const { fetchData: fetchCharacterData } = useCharacterManagementContext();
+  const { setCurrentCharacterId } = useCharacterManagementContext();
   const { fetchData: fetchInventoryData } = useInventoryManagementContext();
 
   const {
@@ -62,9 +62,8 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
       method: "POST",
       notification: { pendingText: "Trying to use consumable item...." },
     }).then(() => {
-      fetchCharacterData();
-      fetchInventoryData();
       fetchProfile();
+      fetchInventoryData();
     });
   };
 
@@ -79,7 +78,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
       notification: { pendingText: "Trying to wear item..." },
     }).then(() => {
       fetchInventoryData();
-      fetchCharacterData({ customUrl: `characters/${characterId}` });
+      setCurrentCharacterId(characterId, true);
     });
   };
 
@@ -90,7 +89,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
       notification: { pendingText: "Trying to equip mercenary..." },
     }).then(() => {
       fetchInventoryData();
-      fetchCharacterData({ customUrl: `characters/${characterId}` });
+      setCurrentCharacterId(characterId, true);
     });
   };
 

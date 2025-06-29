@@ -40,7 +40,7 @@ export const MercenaryItemFielDnDWrapper: FC<
     >
 > = ({ characterId, ...restProps }) => {
   const { mercenaryItem } = restProps;
-  const { fetchData: fetchCharacterData } = useCharacterManagementContext();
+  const { setCurrentCharacterId } = useCharacterManagementContext();
   const { fetchData: fetchInventoryData } = useInventoryManagementContext();
 
   const { setFilter } = useInventoryControlContext();
@@ -98,7 +98,7 @@ export const MercenaryItemFielDnDWrapper: FC<
       notification: { pendingText: "Trying to un equip mercenary..." },
     }).then(() => {
       fetchInventoryData();
-      fetchCharacterData({ customUrl: `characters/${characterId}` });
+      setCurrentCharacterId(characterId, true);
     });
   };
 

@@ -13,10 +13,9 @@ import { FC } from "react";
 import { cn } from "@/lib/utils";
 
 export const CharacterAvatar: FC = () => {
-  const {
-    api: { data },
-  } = useCharacterManagementContext();
+  const { getCurrentSelectedCharacter } = useCharacterManagementContext();
 
+  const currentCharacter = getCurrentSelectedCharacter();
   const [{ canDrop, isOver }, drop] = useDrop<
     unknown,
     BaseDropResultsFromInventory,
@@ -26,7 +25,7 @@ export const CharacterAvatar: FC = () => {
       accept: allowDropToPrefixes.equipmentAndMerchant + ItemType.CONSUMABLE,
       drop: () => ({
         dropAction: PossibleDropResultActions.CONSUME,
-        characterId: data.id,
+        characterId: currentCharacter?.id,
       }),
       collect: (monitor: DropTargetMonitor) => ({
         isOver: monitor.isOver(),

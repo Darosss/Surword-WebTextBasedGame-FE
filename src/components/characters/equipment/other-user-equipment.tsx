@@ -20,15 +20,20 @@ type OtherUserEquipmentProps = {
 
 export const OtherUserEquipment: FC<OtherUserEquipmentProps> = ({ userId }) => {
   const {
-    api: { data: characterData },
-    currentCharacterIdState: [currentCharacterId, setCurrentCharacterId],
+    getCurrentSelectedCharacter,
+    setCurrentCharacterId,
+    currentCharacterId,
   } = useCharacterManagementContext();
+
+  const currentCharacter = getCurrentSelectedCharacter();
+
+  if (!currentCharacter) return <>TODO: Skeleton</>;
 
   return (
     <div className={styles.equipmentWrapper}>
       <div className={styles.equipmentContainer}>
         {Object.values(CharacterEquipmentFields).map((eqField) => {
-          const currentSlot = characterData.equipment.slots[eqField];
+          const currentSlot = currentCharacter.equipment.slots[eqField];
           return (
             <div key={eqField} className={styles[eqField.toLowerCase()]}>
               <div className={styles.background}></div>
@@ -36,13 +41,13 @@ export const OtherUserEquipment: FC<OtherUserEquipmentProps> = ({ userId }) => {
               {currentSlot ? (
                 <EquipmentItem
                   currentField={eqField}
-                  characterId={characterData.id}
+                  characterId={currentCharacter.id}
                   item={currentSlot}
                 />
               ) : (
                 <EmptyEquipmentSlot
                   equipmentField={eqField}
-                  characterId={characterData.id}
+                  characterId={currentCharacter.id}
                 />
               )}
             </div>
@@ -51,13 +56,15 @@ export const OtherUserEquipment: FC<OtherUserEquipmentProps> = ({ userId }) => {
         <div className={styles.heroSelect}>
           <HeroSelect
             currentCharacterId={currentCharacterId}
-            setCurrentCharacterId={setCurrentCharacterId}
+            setCurrentCharacterId={(id) => {
+              setCurrentCharacterId(id, false);
+            }}
             userId={userId}
           />
         </div>
-        {isMercenaryCharacter(characterData) ? (
+        {isMercenaryCharacter(currentCharacter) ? (
           <div className={styles.mercenaryItem}>
-            <MercenaryItemField mercenaryItem={characterData.mercenary} />
+            <MercenaryItemField mercenaryItem={currentCharacter.mercenary} />
           </div>
         ) : null}
       </div>

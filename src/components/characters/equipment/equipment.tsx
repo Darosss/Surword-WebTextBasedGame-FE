@@ -17,10 +17,10 @@ import { equipmentFieldToItemType } from "./slot-mapping";
 import { cn } from "@/lib/utils";
 
 export const Equipment: FC = () => {
-  const {
-    api: { data: characterData },
-    fetchData: fetchCharacterData,
-  } = useCharacterManagementContext();
+  const { getCurrentSelectedCharacter, setCurrentCharacterId } =
+    useCharacterManagementContext();
+
+  const currentCharacter = getCurrentSelectedCharacter();
 
   const { fetchData: fetchInventoryData } = useInventoryManagementContext();
 
@@ -36,14 +36,14 @@ export const Equipment: FC = () => {
       notification: { pendingText: "Trying to un wear an item..." },
     }).then(() => {
       fetchInventoryData();
-      fetchCharacterData();
+      setCurrentCharacterId(characterId, true);
     });
   };
 
   return (
     <>
       {Object.values(CharacterEquipmentFields).map((eqField) => {
-        const currentSlot = characterData.equipment.slots[eqField];
+        const currentSlot = currentCharacter?.equipment.slots[eqField];
         return (
           <div
             key={eqField}
@@ -57,7 +57,7 @@ export const Equipment: FC = () => {
             {currentSlot ? (
               <EquipmentItem
                 currentField={eqField}
-                characterId={characterData.id}
+                characterId={currentCharacter.id}
                 item={currentSlot}
                 onItemUnEquip={(characterId, slot) =>
                   handleOnItemUnEquip(characterId, slot)
@@ -66,7 +66,7 @@ export const Equipment: FC = () => {
             ) : (
               <EmptyEquipmentSlot
                 equipmentField={eqField}
-                characterId={characterData.id}
+                characterId={currentCharacter?.id}
                 onClickEquipmentSlot={(slot) =>
                   setFilter((prevState) => ({
                     ...prevState,
@@ -79,21 +79,21 @@ export const Equipment: FC = () => {
         );
       })}
 
-      {isMercenaryCharacter(characterData) ? (
+      {currentCharacter && isMercenaryCharacter(currentCharacter) && (
         <div
           className={cn(
             "relative max-w-3/4 aspect-square rounded-lg bg-black/40 border-2 border-gray-600 flex flex-col items-center justify-center text-center text-xs text-gray-400 hover:bg-gray-700/50 hover:border-gray-500 transition-all",
             "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
-            characterData.mercenary ? "border-0" : "border-dashed"
+            currentCharacter.mercenary ? "border-0" : "border-dashed"
           )}
           style={{ gridArea: "mercenary" }}
         >
           <MercenaryItemFielDnDWrapper
-            mercenaryItem={characterData.mercenary}
-            characterId={characterData.id}
+            mercenaryItem={currentCharacter.mercenary}
+            characterId={currentCharacter.id}
           />
         </div>
-      ) : null}
+      )}
     </>
   );
 };

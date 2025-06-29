@@ -9,17 +9,18 @@ import { useCharacterManagementContext } from "./character-management-context";
 type CharacterStatisticsProps = {};
 
 export const CharacterStatistics: FC<CharacterStatisticsProps> = ({}) => {
-  const {
-    api: { data },
-  } = useCharacterManagementContext();
+  const { getCurrentSelectedCharacter } = useCharacterManagementContext();
 
+  const currentCharacter = getCurrentSelectedCharacter();
   return (
     <div>
       <div>
-        <BaseDetails character={data} />
+        <BaseDetails character={currentCharacter || undefined} />
       </div>
-      <BaseStatistics statistics={data.stats.statistics} />
-      <AdditionalStatistics statistics={data.stats.additionalStatistics} />
+      <BaseStatistics statistics={currentCharacter?.stats.statistics} />
+      <AdditionalStatistics
+        statistics={currentCharacter?.stats.additionalStatistics}
+      />
     </div>
   );
 };

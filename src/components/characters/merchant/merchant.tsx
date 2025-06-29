@@ -19,7 +19,6 @@ import {
 } from "../dndTypes";
 import { PossibleDropResultActions } from "../equipment";
 import { MerchantCommodityTimer } from "./merchant-commodity-timer";
-import { FetchingInfo } from "@/components/common";
 import { useInventoryManagementContext } from "../inventory";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Coins } from "lucide-react";
@@ -55,7 +54,7 @@ export const Merchant: FC = () => {
 
   const {
     user: { gold },
-    fetchProfile,
+    updateUserDetails,
   } = useAuthContext();
   const { manageInventoryItems } = useInventoryManagementContext();
 
@@ -80,11 +79,12 @@ export const Merchant: FC = () => {
       method: "POST",
       notification: { pendingText: "Trying to buy item" },
     }).then((response) => {
-      if (response?.body.data) {
-        manageMerchantItems({ type: "buy", id: response.body.data.id });
+      const responseData = response.body.data;
+      if (responseData) {
+        manageMerchantItems({ type: "buy", id: responseData.id });
 
-        manageInventoryItems({ type: "add", item: response.body.data });
-        fetchProfile();
+        manageInventoryItems({ type: "add", item: responseData });
+        updateUserDetails({ gold: gold - responseData.value });
       }
     });
   };

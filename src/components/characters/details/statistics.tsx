@@ -16,7 +16,7 @@ import { StatRow } from "./stat-row";
 import { CharacterAvatar } from "../characters/character-avatar";
 
 type BaseStatisticsProps = {
-  statistics: HeroBaseStatistics;
+  statistics?: HeroBaseStatistics;
   canTrain?: {
     onSuccesTrain: () => void;
   };
@@ -54,17 +54,21 @@ export const BaseStatistics: FC<BaseStatisticsProps> = ({
   return (
     <div>
       <div>Statistics</div>
-      {Object.entries(statistics)
-        .sort()
-        .map(([statName, value]) => (
-          <StatRow
-            key={statName}
-            label={statName}
-            value={value.effectiveValue}
-            tooltip={<Tooltip statValues={value} />}
-            isTrainable={!!canTrain}
-          />
-        ))}
+      {statistics ? (
+        Object.entries(statistics)
+          .sort()
+          .map(([statName, value]) => (
+            <StatRow
+              key={statName}
+              label={statName}
+              value={value.effectiveValue}
+              tooltip={<Tooltip statValues={value} />}
+              isTrainable={!!canTrain}
+            />
+          ))
+      ) : (
+        <>TODO: Skeleton</>
+      )}
     </div>
   );
 };
@@ -113,7 +117,7 @@ export const TrainBaseStatisticButton = ({
 };
 
 type AdditionalStatisticsProps = {
-  statistics: HeroAdditionalStatistics;
+  statistics?: HeroAdditionalStatistics;
 };
 
 export const AdditionalStatistics: FC<AdditionalStatisticsProps> = ({
@@ -147,36 +151,43 @@ export const AdditionalStatistics: FC<AdditionalStatisticsProps> = ({
 
   return (
     <div>
-      {Object.entries(statistics)
-        .sort()
-        .map(([statName, value]) => (
-          <StatRow
-            key={statName}
-            label={statName}
-            value={value.effectiveValue}
-            tooltip={<Tooltip statValues={value} />}
-            isTrainable={false}
-          />
-        ))}
+      {statistics ? (
+        Object.entries(statistics)
+          .sort()
+          .map(([statName, value]) => (
+            <StatRow
+              key={statName}
+              label={statName}
+              value={value.effectiveValue}
+              tooltip={<Tooltip statValues={value} />}
+              isTrainable={false}
+            />
+          ))
+      ) : (
+        <>TODO: Skeleton</>
+      )}
     </div>
   );
 };
 //TODO: tooltip with advanced statistics display
 
 type BaseDetailsProps = {
-  character: CharacterTypesAlias;
+  character?: CharacterTypesAlias;
 };
 
 export const BaseDetails: FC<BaseDetailsProps> = ({ character }) => {
-  const { name, level, health } = character;
-  const isMercenary = isMercenaryCharacter(character);
+  const { name, level, health } = character || {};
+  const isMercenary = character && isMercenaryCharacter(character);
 
   const maxHealth =
-    character.stats.additionalStatistics["MAX_HEALTH"].effectiveValue;
-  const hpPercentage = character ? (character.health / maxHealth) * 100 : 0;
-  const xpPercentage = !isMercenaryCharacter(character)
-    ? (character.health / character.expToLevelUp) * 100
+    character?.stats.additionalStatistics["MAX_HEALTH"].effectiveValue;
+  const hpPercentage = character
+    ? (character.health / (maxHealth || character.health)) * 100
     : 0;
+  const xpPercentage =
+    character && !isMercenaryCharacter(character)
+      ? (character.health / character.expToLevelUp) * 100
+      : 0;
 
   return (
     <div className="mb-4">
@@ -202,7 +213,7 @@ export const BaseDetails: FC<BaseDetailsProps> = ({ character }) => {
             <div className="flex justify-between text-xs mb-0.5">
               <span className="font-medium text-green-400">XP</span>
               <span className="text-gray-400">
-                {character.experience}/ {character.expToLevelUp}
+                {character?.experience || 0}/ {character?.expToLevelUp || 100}
               </span>
             </div>
             <Progress value={xpPercentage} className="h-2 [&>*]:bg-green-500" />

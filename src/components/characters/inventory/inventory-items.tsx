@@ -35,7 +35,11 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
   dropRef,
   className,
 }) => {
-  const { updateHeroDetails, fetchProfile } = useAuthContext();
+  const {
+    updateHeroDetails,
+    updateUserDetails,
+    user: { gold },
+  } = useAuthContext();
 
   const { filter, sort } = useInventoryControlContext();
   const { setCurrentCharacterId, updateCharacter } =
@@ -103,10 +107,12 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
       method: "POST",
       notification: { pendingText: "Trying to sell item" },
     }).then((response) => {
-      if (response?.body.data) {
+      const responseData = response.body.data;
+
+      if (responseData) {
         manageInventoryItems({ type: "remove", id });
-        manageMerchantItems({ type: "sell", item: response.body.data });
-        fetchProfile();
+        manageMerchantItems({ type: "sell", item: responseData });
+        updateUserDetails({ gold: gold + responseData.value });
       }
     });
   };

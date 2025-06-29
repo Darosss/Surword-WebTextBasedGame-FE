@@ -41,7 +41,7 @@ export const MercenaryItemFielDnDWrapper: FC<
 > = ({ characterId, ...restProps }) => {
   const { mercenaryItem } = restProps;
   const { setCurrentCharacterId } = useCharacterManagementContext();
-  const { fetchData: fetchInventoryData } = useInventoryManagementContext();
+  const { manageInventoryItems } = useInventoryManagementContext();
 
   const { setFilter } = useInventoryControlContext();
   const [{ canDrop, isOver }, drop] = useDrop<
@@ -96,9 +96,12 @@ export const MercenaryItemFielDnDWrapper: FC<
       url: `characters/un-equip-mercenary/${characterId}`,
       method: "POST",
       notification: { pendingText: "Trying to un equip mercenary..." },
-    }).then(() => {
-      fetchInventoryData();
-      setCurrentCharacterId(characterId, true);
+    }).then((response) => {
+      const responseData = response.body.data;
+      if (responseData) {
+        manageInventoryItems({ type: "add", item: responseData });
+        setCurrentCharacterId(characterId, true);
+      }
     });
   };
 

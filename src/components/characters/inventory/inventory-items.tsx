@@ -39,7 +39,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
   const { filter, sort } = useInventoryControlContext();
   const { setCurrentCharacterId, updateCharacter } =
     useCharacterManagementContext();
-  const { fetchData: fetchInventoryData } = useInventoryManagementContext();
+  const { manageInventoryItems } = useInventoryManagementContext();
 
   const {
     apiMerchant: { fetchData: fetchMerchantData },
@@ -68,7 +68,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
       if (!newHealth) return;
       updateHeroDetails({ health: newHealth });
       updateCharacter({ update: { health: newHealth } });
-      fetchInventoryData();
+      manageInventoryItems({ type: "remove", id: itemId });
     });
   };
 
@@ -82,7 +82,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
       method: "POST",
       notification: { pendingText: "Trying to wear item..." },
     }).then(() => {
-      fetchInventoryData();
+      manageInventoryItems({ type: "remove", id: itemId });
       setCurrentCharacterId(characterId, true);
     });
   };
@@ -93,7 +93,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
       method: "POST",
       notification: { pendingText: "Trying to equip mercenary..." },
     }).then(() => {
-      fetchInventoryData();
+      manageInventoryItems({ type: "remove", id: itemId });
       setCurrentCharacterId(characterId, true);
     });
   };
@@ -105,7 +105,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
       notification: { pendingText: "Trying to sell item" },
     }).then((response) => {
       if (response?.body.data) {
-        fetchInventoryData();
+        manageInventoryItems({ type: "remove", id });
         fetchProfile();
         fetchMerchantData();
       }

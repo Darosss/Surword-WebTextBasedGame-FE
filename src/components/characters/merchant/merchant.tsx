@@ -1,6 +1,6 @@
 "use client";
 
-import { ItemsCostType } from "@/api/types";
+import { InventoryItemType, ItemsCostType } from "@/api/types";
 import React, { FC, useMemo, useState } from "react";
 import { filterItemsEntries, getSortedItems } from "@/components/items";
 import type { FilterType, SortType } from "@/components/items";
@@ -61,7 +61,7 @@ export const Merchant: FC = () => {
     user: { gold },
     fetchProfile,
   } = useAuthContext();
-  const { fetchData: fetchInventoryData } = useInventoryManagementContext();
+  const { manageInventoryItems } = useInventoryManagementContext();
 
   const [filter, setFilter] = useState<FilterType>({
     name: null,
@@ -83,14 +83,14 @@ export const Merchant: FC = () => {
 
   const handleOnBuyItem = (id: string, cost: number) => {
     if (gold < cost) return toast.error("You do not have enough gold");
-    fetchBackendApi({
+    fetchBackendApi<InventoryItemType>({
       url: `merchants/buy-item/${id}`,
       method: "POST",
       notification: { pendingText: "Trying to buy item" },
     }).then((response) => {
       if (response?.body.data) {
         fetchMerchantData();
-        fetchInventoryData();
+        manageInventoryItems({ type: "add", item: response.body.data });
         fetchProfile();
       }
     });

@@ -22,7 +22,7 @@ export const Equipment: FC = () => {
 
   const currentCharacter = getCurrentSelectedCharacter();
 
-  const { fetchData: fetchInventoryData } = useInventoryManagementContext();
+  const { manageInventoryItems } = useInventoryManagementContext();
 
   const { setFilter } = useInventoryControlContext();
 
@@ -34,9 +34,13 @@ export const Equipment: FC = () => {
       url: `characters/un-equip/${characterId}/${slot}`,
       method: "POST",
       notification: { pendingText: "Trying to un wear an item..." },
-    }).then(() => {
-      fetchInventoryData();
-      setCurrentCharacterId(characterId, true);
+    }).then((response) => {
+      const responseData = response.body.data;
+
+      if (responseData) {
+        manageInventoryItems({ type: "add", item: responseData });
+        setCurrentCharacterId(characterId, true);
+      }
     });
   };
 

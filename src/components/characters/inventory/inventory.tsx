@@ -17,9 +17,7 @@ import { ItemsSidebarFilter } from "@/components/items/items-sidebar-filter";
 import { useInventoryManagementContext } from "./inventory-management-context";
 
 export const Inventory: FC = ({}) => {
-  const {
-    api: { data: inventoryData },
-  } = useInventoryManagementContext();
+  const { items } = useInventoryManagementContext();
   const [{ canDrop, isOver }, drop] = useDrop<
     DropDragObjectIntoInventory,
     InventoryDropResult,
@@ -53,7 +51,7 @@ export const Inventory: FC = ({}) => {
       <ItemsHeaderFilter setFilter={setFilter} sort={sort} setSort={setSort} />
       <ItemsSidebarFilter filter={filter} setFilter={setFilter} />
       <InventoryItems
-        items={inventoryData.items}
+        items={items}
         dropRef={drop}
         className={` ${
           isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""

@@ -13,7 +13,7 @@ import { FC } from "react";
 
 type EmptyEquipmentSlotProps = {
   equipmentField: CharacterEquipmentFields;
-  characterId: string;
+  characterId?: string;
   onClickEquipmentSlot?: (slotName: CharacterEquipmentFields) => void;
 };
 
@@ -24,18 +24,21 @@ export const EmptyEquipmentSlot: FC<EmptyEquipmentSlotProps> = ({
 }) => {
   const [{ canDrop, isOver }, drop] = useDrop<
     unknown,
-    BaseEquipmentFieldDropResult,
+    BaseEquipmentFieldDropResult | null,
     UseDropBaseCollectedProps
   >(
     () => ({
       accept: equipmentFieldToItemType[equipmentField].map(
         (val) => allowDropToPrefixes.equipmentAndMerchant + val
       ),
-      drop: () => ({
-        dropAction: PossibleDropResultActions.EQUIP_ITEM,
-        characterId,
-        name: equipmentField,
-      }),
+      drop: () =>
+        characterId
+          ? {
+              dropAction: PossibleDropResultActions.EQUIP_ITEM,
+              characterId,
+              name: equipmentField,
+            }
+          : null,
       collect: (monitor: DropTargetMonitor) => ({
         isOver: monitor.isOver(),
         canDrop: monitor.canDrop(),

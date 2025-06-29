@@ -14,7 +14,7 @@ for now it's just create button
 */
 
 export const CharacterCreator: FC = () => {
-  const { fetchData: fetchCharacterData } = useCharacterManagementContext();
+  const { setCurrentCharacterId } = useCharacterManagementContext();
 
   const {
     api: { responseData },
@@ -28,8 +28,8 @@ export const CharacterCreator: FC = () => {
   );
 
   useEffect(() => {
-    if (responseData.data) fetchCharacterData();
-  }, [responseData.data, fetchCharacterData]);
+    if (responseData.data) setCurrentCharacterId();
+  }, [responseData.data, setCurrentCharacterId]);
 
   return (
     <div className="flex flex-col grow items-center">

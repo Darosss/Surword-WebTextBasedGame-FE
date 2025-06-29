@@ -6,9 +6,8 @@ import { HeroSelect } from "@/components/characters/equipment/hero-select";
 import HeroDetails from "./hero-details";
 
 export default function CharacterDisplay() {
-  const {
-    currentCharacterIdState: [currentCharacterId, setCurrentCharacterId],
-  } = useCharacterManagementContext();
+  const { currentCharacterId, setCurrentCharacterId } =
+    useCharacterManagementContext();
 
   return (
     <div className="p-4 rounded-lg bg-gray-800/60 border border-gray-700 h-full flex flex-col">

@@ -8,20 +8,28 @@ type TrainCharacterStatisticsProps = {};
 export const TrainCharacterStatistics: FC<
   TrainCharacterStatisticsProps
 > = ({}) => {
-  const {
-    api: { data },
-    fetchData,
-  } = useCharacterManagementContext();
+  const { getCurrentSelectedCharacter, setCurrentCharacterId } =
+    useCharacterManagementContext();
 
+  const currentCharacter = getCurrentSelectedCharacter();
+
+  if (!currentCharacter) return <>No character</>;
   return (
     <div>
       <BaseStatistics
-        statistics={data.stats.statistics}
-        {...(!isMercenaryCharacter(data)
-          ? { canTrain: { onSuccesTrain: fetchData } }
+        statistics={currentCharacter.stats.statistics}
+        {...(!isMercenaryCharacter(currentCharacter)
+          ? {
+              canTrain: {
+                onSuccesTrain: () =>
+                  setCurrentCharacterId(currentCharacter.id, true),
+              },
+            }
           : null)}
       />
-      <AdditionalStatistics statistics={data.stats.additionalStatistics} />
+      <AdditionalStatistics
+        statistics={currentCharacter.stats.additionalStatistics}
+      />
     </div>
   );
 };

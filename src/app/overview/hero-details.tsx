@@ -15,10 +15,9 @@ import {
 import { useCharacterManagementContext } from "@/components/characters";
 
 export default function HeroDetails() {
-  const {
-    api: { data: characterData },
-  } = useCharacterManagementContext();
+  const { getCurrentSelectedCharacter } = useCharacterManagementContext();
 
+  const currentCharacter = getCurrentSelectedCharacter();
   return (
     <div className="space-y-4">
       <Accordion
@@ -31,7 +30,7 @@ export default function HeroDetails() {
             Details
           </AccordionTrigger>
           <AccordionContent className="pt-0 pb-1">
-            <BaseDetails character={characterData} />
+            {currentCharacter && <BaseDetails character={currentCharacter} />}
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="core-attributes">
@@ -46,18 +45,24 @@ export default function HeroDetails() {
               </TabsList>
 
               <TabsContent value="overview_stats" className="mt-3">
-                <BaseStatistics statistics={characterData.stats.statistics} />
+                {currentCharacter && (
+                  <BaseStatistics
+                    statistics={currentCharacter.stats.statistics}
+                  />
+                )}
               </TabsContent>
 
               <TabsContent value="train_stats" className="mt-3">
-                <BaseStatistics
-                  statistics={characterData.stats.statistics}
-                  canTrain={{
-                    onSuccesTrain: () => {
-                      //TODO: add on success
-                    },
-                  }}
-                />
+                {currentCharacter && (
+                  <BaseStatistics
+                    statistics={currentCharacter.stats.statistics}
+                    canTrain={{
+                      onSuccesTrain: () => {
+                        //TODO: add on success
+                      },
+                    }}
+                  />
+                )}
               </TabsContent>
             </Tabs>
           </AccordionContent>
@@ -67,9 +72,11 @@ export default function HeroDetails() {
             Combat Statistics
           </AccordionTrigger>
           <AccordionContent className="relative pt-0 pb-1">
-            <AdditionalStatistics
-              statistics={characterData.stats.additionalStatistics}
-            />
+            {currentCharacter && (
+              <AdditionalStatistics
+                statistics={currentCharacter.stats.additionalStatistics}
+              />
+            )}
           </AccordionContent>
         </AccordionItem>
       </Accordion>

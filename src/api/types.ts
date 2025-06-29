@@ -195,6 +195,10 @@ export type EquipResponseType = Item;
 
 export type UnEquipResponseType = Item;
 
+export type UseConsumableItem = {
+  newHealth?: number;
+};
+
 export type ItemsCostType = {
   [id: string]: number;
 };

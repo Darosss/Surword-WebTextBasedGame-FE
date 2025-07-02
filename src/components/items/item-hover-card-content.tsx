@@ -30,6 +30,16 @@ export function ItemHoverCardContentDisplay({
       >
         {item.name}
       </h3>
+      {
+        <h4
+          className={cn(
+            "text-sm font-semibold leading-tight",
+            currentRarityStyle.text
+          )}
+        >
+          {"prefix" in item && item.prefix} {"suffix" in item && item.suffix}
+        </h4>
+      }
 
       <hr className="border-gray-700/70" />
 

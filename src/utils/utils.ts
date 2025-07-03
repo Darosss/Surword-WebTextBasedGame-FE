@@ -35,14 +35,12 @@ export const getFormattedName = (
   type: "original" | "capital" | "allCapital" = "capital"
 ) => {
   if (name.length === 0) return "";
+  const modifiedName = name.replaceAll("_", " ").toLocaleLowerCase();
 
   if (type === "allCapital") {
-    const splited = name.split("_");
-    return splited
-      .map((val) => val.at(0)?.toUpperCase() + val.slice(1))
-      .join(" ");
+    const splited = modifiedName.split(" ");
+    return splited.map((val) => val[0]?.toUpperCase() + val.slice(1)).join(" ");
   }
-  const modifiedName = name.replaceAll("_", " ").toLocaleLowerCase();
   if (type === "capital") {
     return (modifiedName.at(0)?.toUpperCase() || "") + modifiedName.slice(1);
   }

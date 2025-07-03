@@ -3,6 +3,7 @@ import { ItemStatisticLine } from "./item-statistic-line";
 import { rarityStyles } from "./utils";
 import { InventoryItemType } from "@/api/types";
 import { isConsumableItem } from "@/api/utils";
+import { getFormattedName } from "@/utils/utils";
 
 interface ItemHoverCardContentDisplayProps {
   item: InventoryItemType;
@@ -28,18 +29,12 @@ export function ItemHoverCardContentDisplay({
           currentRarityStyle.text
         )}
       >
-        {item.name}
+        {"prefix" in item && getFormattedName(item.prefix)}{" "}
+        <span className="brightness-150">
+          {getFormattedName(item.name, "allCapital")}{" "}
+        </span>{" "}
+        {"suffix" in item && getFormattedName(item.suffix, "original")}
       </h3>
-      {
-        <h4
-          className={cn(
-            "text-sm font-semibold leading-tight",
-            currentRarityStyle.text
-          )}
-        >
-          {"prefix" in item && item.prefix} {"suffix" in item && item.suffix}
-        </h4>
-      }
 
       <hr className="border-gray-700/70" />
 
@@ -97,15 +92,19 @@ export function ItemHoverCardContentDisplay({
           <span className="text-yellow-300 font-medium">{item.value} G</span>
         </span>
         <span>
-          Type: <span className="text-gray-100">{item.type}</span>
+          Type:{" "}
+          <span className="text-gray-100">{getFormattedName(item.type)}</span>
         </span>
         <span>
-          Subtype: <span className="text-gray-100">{item.subtype}</span>
+          Subtype:{" "}
+          <span className="text-gray-100">
+            {getFormattedName(item.subtype)}
+          </span>
         </span>
         <span className="col-span-2">
           Rarity:{" "}
           <span className={cn("font-medium", currentRarityStyle.text)}>
-            {item.rarity}
+            {getFormattedName(item.rarity)}
           </span>
         </span>
         {item.upgradePoints !== undefined && (

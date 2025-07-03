@@ -29,3 +29,22 @@ export const formatTime = (milliseconds: number): string => {
 const padWithZero = (value: number) => {
   return value < 10 ? `0${value}` : value;
 };
+
+export const getFormattedName = (
+  name: string,
+  type: "original" | "capital" | "allCapital" = "capital"
+) => {
+  if (name.length === 0) return "";
+
+  if (type === "allCapital") {
+    const splited = name.split("_");
+    return splited
+      .map((val) => val.at(0)?.toUpperCase() + val.slice(1))
+      .join(" ");
+  }
+  const modifiedName = name.replaceAll("_", " ").toLocaleLowerCase();
+  if (type === "capital") {
+    return (modifiedName.at(0)?.toUpperCase() || "") + modifiedName.slice(1);
+  }
+  return modifiedName;
+};

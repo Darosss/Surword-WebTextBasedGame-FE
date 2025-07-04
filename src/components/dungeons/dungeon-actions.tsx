@@ -1,17 +1,20 @@
 import { formatTime, getRemainingTimeFromDateToDate } from "@/utils/utils";
 import { FC, useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { LucideLoader } from "lucide-react";
 
 type DungeonActionsProps = {
   canFightDate: Date;
   onClickFight: () => void;
   completed: boolean;
+  isPending?: boolean;
 };
 
 export const DungeonActions: FC<DungeonActionsProps> = ({
   completed,
   canFightDate,
   onClickFight,
+  isPending,
 }) => {
   const [remainingTime, setRemainingTime] = useState(0);
 
@@ -42,10 +45,12 @@ export const DungeonActions: FC<DungeonActionsProps> = ({
         formatTime(remainingTime)
       ) : (
         <Button
+          disabled={isPending}
           variant={(completed && "warning") || "destructive"}
           onClick={onClickFight}
+          className="w-full"
         >
-          Fight
+          {isPending ? <LucideLoader /> : "Fight"}
         </Button>
       )}
     </div>

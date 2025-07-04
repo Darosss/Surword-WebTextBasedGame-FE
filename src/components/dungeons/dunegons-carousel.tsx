@@ -38,6 +38,7 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
   const {
     api: {
       responseData: { data: fightData },
+      isPending,
     },
     fetchData: startAFight,
   } = useFetch<StartAFightResponse>(
@@ -101,20 +102,18 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
           <CarouselContent className="-ml-2 sm:-ml-3 py-2 px-6">
             <CarouselItemContent
               level={currentLevel}
-              fightData={fightData}
               canFightDate={canFightDate}
+              isPending={!!isPending}
               onClickFight={handleStartAFight}
-              onConfirmReport={onConfirmReport}
             />
             {completed.map((completedDng) => (
               <CarouselItemContent
                 key={completedDng.finished + completedDng.level}
                 level={completedDng.level}
                 completed={new Date(completedDng.finished)}
-                fightData={fightData}
                 canFightDate={canFightDate}
+                isPending={!!isPending}
                 onClickFight={handleStartAFight}
-                onConfirmReport={onConfirmReport}
               />
             ))}
           </CarouselContent>
@@ -136,20 +135,20 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
 type CarouselItemContentProps = {
   level: number;
   completed?: Date;
-  fightData: FightReportType | null;
   canFightDate: Date;
+  isPending: boolean;
   onClickFight: (level: number) => void;
-  onConfirmReport: () => void;
 };
 
 const CarouselItemContent: FC<CarouselItemContentProps> = ({
   level,
   completed,
   canFightDate,
+  isPending,
   onClickFight,
 }) => {
   return (
-    <CarouselItem className="border rounded-md p-4 pl-2 sm:pl-3 m-1 basis-1/2 md:basis-1/3 lg:basis-1/2 xl:basis-1/3">
+    <CarouselItem className="border rounded-md p-4 pl-2 sm:pl-3 m-1 basis-1/2 md:basis-1/3 lg:basis-1/2 xl:basis-1/3 flex flex-col justify-between">
       <div>
         {completed && `Defeated dungeon`} Level: {level}
       </div>
@@ -159,6 +158,7 @@ const CarouselItemContent: FC<CarouselItemContentProps> = ({
           canFightDate={canFightDate}
           completed={!!completed}
           onClickFight={() => onClickFight(level)}
+          isPending={isPending}
         />
       </div>
     </CarouselItem>

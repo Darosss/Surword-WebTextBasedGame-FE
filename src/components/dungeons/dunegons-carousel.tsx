@@ -94,42 +94,40 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
       </h2>
       <div className="grid items-center grid-cols-1  sm:gap-6 mb-6 sm:mb-8">
         {" "}
-        {completed.length > 1 ? (
-          <Carousel
-            opts={{ align: "center", loop: completed.length > 3 }}
-            className="w-full max-w-full border border-b rounded-md p-4"
-          >
-            <CarouselContent className="-ml-2 sm:-ml-3 py-2 px-6">
+        <Carousel
+          opts={{ align: "center", loop: completed.length > 3 }}
+          className="w-full max-w-full border border-b rounded-md p-4"
+        >
+          <CarouselContent className="-ml-2 sm:-ml-3 py-2 px-6">
+            <CarouselItemContent
+              level={currentLevel}
+              fightData={fightData}
+              canFightDate={canFightDate}
+              onClickFight={handleStartAFight}
+              onConfirmReport={onConfirmReport}
+            />
+            {completed.map((completedDng) => (
               <CarouselItemContent
-                level={currentLevel}
+                key={completedDng.finished + completedDng.level}
+                level={completedDng.level}
+                completed={new Date(completedDng.finished)}
                 fightData={fightData}
                 canFightDate={canFightDate}
                 onClickFight={handleStartAFight}
                 onConfirmReport={onConfirmReport}
               />
-              {completed.map((completedDng) => (
-                <CarouselItemContent
-                  key={completedDng.finished + completedDng.level}
-                  level={completedDng.level}
-                  completed={new Date(completedDng.finished)}
-                  fightData={fightData}
-                  canFightDate={canFightDate}
-                  onClickFight={handleStartAFight}
-                  onConfirmReport={onConfirmReport}
-                />
-              ))}
-            </CarouselContent>
-            {completed.length >
-              (typeof window !== "undefined" && window.innerWidth < 1024
-                ? 2
-                : 3) && (
-              <>
-                <CarouselPrevious className="absolute left-[-8px] sm:left-[-12px] top-1/2 -translate-y-1/2 h-7 w-7 bg-gray-700/90 hover:bg-gray-600 border-gray-600 text-gray-300 z-10" />
-                <CarouselNext className="absolute right-[-8px] sm:right-[-12px] top-1/2 -translate-y-1/2 h-7 w-7 bg-gray-700/90 hover:bg-gray-600 border-gray-600 text-gray-300 z-10" />
-              </>
-            )}
-          </Carousel>
-        ) : null}
+            ))}
+          </CarouselContent>
+          {completed.length >
+            (typeof window !== "undefined" && window.innerWidth < 1024
+              ? 2
+              : 3) && (
+            <>
+              <CarouselPrevious className="absolute left-[-8px] sm:left-[-12px] top-1/2 -translate-y-1/2 h-7 w-7 bg-gray-700/90 hover:bg-gray-600 border-gray-600 text-gray-300 z-10" />
+              <CarouselNext className="absolute right-[-8px] sm:right-[-12px] top-1/2 -translate-y-1/2 h-7 w-7 bg-gray-700/90 hover:bg-gray-600 border-gray-600 text-gray-300 z-10" />
+            </>
+          )}
+        </Carousel>
       </div>
     </div>
   );

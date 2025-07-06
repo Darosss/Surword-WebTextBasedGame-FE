@@ -36,7 +36,7 @@ const ItemWrapper: FC<ItemWrapper> = ({
       className={cn(
         "group relative aspect-square w-full rounded-lg border-2 flex flex-col items-center justify-center transition-all scale-95",
         currentRarityStyles
-          ? `${currentRarityStyles?.bg} hover:scale-100 hover:shadow-lg`
+          ? `${currentRarityStyles?.bg} ${currentRarityStyles.border} hover:scale-100 hover:brightness-200 hover:shadow-lg`
           : "brightness-50"
       )}
       ref={refForWrapper}
@@ -96,7 +96,7 @@ export const ItemDisplay: FC<ItemDisplayProps> = ({
         </ItemWrapper>
       </HoverCardTrigger>
       <HoverCardContent
-        side="right"
+        side="bottom"
         className="z-[102] bg-current border-none shadow-none w-auto"
       >
         <ItemHoverCardContentDisplay item={item} />

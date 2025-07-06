@@ -11,37 +11,37 @@ type RarityStylesType = {
 export const rarityStyles: Record<ItemRarity, RarityStylesType> = {
   COMMON: {
     text: "text-gray-300",
-    border: "border-gray-600",
+    border: "border-gray-400",
     bg: "bg-gray-600/80",
   },
   UNCOMMON: {
     text: "text-green-400",
-    border: "border-green-700",
+    border: "border-green-400",
     bg: "bg-green-600/80",
   },
   RARE: {
     text: "text-blue-400",
-    border: "border-blue-700",
+    border: "border-blue-400",
     bg: "bg-blue-600/80",
   },
   VERY_RARE: {
     text: "text-purple-400",
-    border: "border-purple-700",
+    border: "border-purple-400",
     bg: "bg-purple-600/80",
   },
   EPIC: {
     text: "text-yellow-400",
-    border: "border-yellow-600",
+    border: "border-yellow-400",
     bg: "bg-yellow-400/50",
   },
   LEGENDARY: {
     text: "text-orange-400",
-    border: "border-orange-600",
+    border: "border-orange-400",
     bg: "bg-orange-600/80",
   },
   MYTHIC: {
     text: "text-rose-400",
-    border: "border-rose-600",
+    border: "border-rose-400",
     bg: "bg-rose-600/80",
   },
 };

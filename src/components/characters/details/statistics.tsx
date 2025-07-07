@@ -64,6 +64,10 @@ export const BaseStatistics: FC<BaseStatisticsProps> = ({
               value={value.effectiveValue}
               tooltip={<Tooltip statValues={value} />}
               isTrainable={!!canTrain}
+              progress={{
+                effective: value.effectiveValue,
+                max: value.max,
+              }}
             />
           ))
       ) : (

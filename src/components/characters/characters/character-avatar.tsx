@@ -35,16 +35,14 @@ export const CharacterAvatar: FC = () => {
     ["any"]
   );
   const isActive = canDrop && isOver;
-  return (
-    <Image
-      src="/images/hero-placeholder.png"
-      alt="Character Avatar"
-      fill
-      ref={drop}
+  return drop(
+    <div
       className={cn(
-        "max-w-full h-auto rounded-md object-contain",
+        "relative max-w-full h-auto rounded-md object-contain",
         isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""
       )}
-    />
+    >
+      <Image src="/images/hero-placeholder.png" alt="Character Avatar" fill />
+    </div>
   );
 };

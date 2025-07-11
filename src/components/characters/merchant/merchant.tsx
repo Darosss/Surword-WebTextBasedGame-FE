@@ -114,23 +114,24 @@ export const Merchant: FC = () => {
 
       <ScrollArea className="flex-grow">
         <ScrollBar />
-        <div
-          className={`max-h-[calc(100dvh-10rem)] grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 pr-2
+        {drop(
+          <div
+            className={`max-h-[calc(100dvh-10rem)] grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 pr-2
               ${isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""}
         `}
-          ref={drop}
-        >
-          {itemsToRender?.map((value) => {
-            return (
-              <MerchantItem
-                key={value[0]}
-                itemData={value[1]}
-                onItemBuy={handleOnBuyItem}
-                currentGold={gold}
-              />
-            );
-          })}
-        </div>
+          >
+            {itemsToRender?.map((value) => {
+              return (
+                <MerchantItem
+                  key={value[0]}
+                  itemData={value[1]}
+                  onItemBuy={handleOnBuyItem}
+                  currentGold={gold}
+                />
+              );
+            })}
+          </div>
+        )}
       </ScrollArea>
     </div>
   );

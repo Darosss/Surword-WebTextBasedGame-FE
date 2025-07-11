@@ -47,9 +47,8 @@ export const EmptyEquipmentSlot: FC<EmptyEquipmentSlotProps> = ({
     [characterId, equipmentField]
   );
   const isActive = canDrop && isOver;
-  return (
+  return drop(
     <div
-      ref={drop}
       className={`w-full h-full
         ${isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""}`}
       onClick={() =>

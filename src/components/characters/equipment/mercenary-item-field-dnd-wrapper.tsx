@@ -106,9 +106,8 @@ export const MercenaryItemFielDnDWrapper: FC<
   };
 
   const isActive = canDrop && isOver;
-  return (
+  return drop(
     <div
-      ref={drop}
       className={`w-full h-full
         ${isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""}`}
       style={{ opacity }}

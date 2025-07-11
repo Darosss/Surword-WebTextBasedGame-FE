@@ -6,11 +6,12 @@ import { ItemDisplay } from "@/components/items";
 import Image from "next/image";
 
 import { FC } from "react";
+import { ConnectDragSource } from "react-dnd";
 
 export type MercenaryItemFieldProps = {
   mercenaryItem?: ItemMercenary;
   itemDisplayOpacity?: number;
-  itemDisplayRefWrapper?: React.Ref<HTMLDivElement> | undefined;
+  itemDisplayRefWrapper?: ConnectDragSource;
 };
 
 export const MercenaryItemField: FC<MercenaryItemFieldProps> = ({

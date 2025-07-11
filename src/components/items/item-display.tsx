@@ -11,12 +11,13 @@ import {
   HoverCardTrigger,
 } from "../ui/hover-card";
 import { rarityStyles } from "./utils";
+import { ConnectableElement, ConnectDragSource } from "react-dnd";
 type ItemDisplayProps = ItemWrapper & {
   item: InventoryItemType;
 };
 type ItemWrapper = {
   rarity?: ItemRarity;
-  refForWrapper?: React.Ref<HTMLDivElement> | undefined;
+  refForWrapper?: ConnectDragSource;
   opacity?: number;
   costOptions?: {
     value: number;
@@ -31,19 +32,22 @@ const ItemWrapper: FC<ItemWrapper> = ({
   children,
 }) => {
   const currentRarityStyles = rarity ? rarityStyles[rarity] : null;
+  const RefWrapper = ({ children }: { children: ConnectableElement }) =>
+    refForWrapper ? <>{refForWrapper(children)}</> : <>{children}</>;
   return (
-    <div
-      className={cn(
-        "group relative aspect-square w-full rounded-lg border-2 flex flex-col items-center justify-center transition-all scale-95",
-        currentRarityStyles
-          ? `${currentRarityStyles?.bg} ${currentRarityStyles.border} hover:scale-100 hover:brightness-200 hover:shadow-lg`
-          : "brightness-50"
-      )}
-      ref={refForWrapper}
-      style={{ opacity }}
-    >
-      {children}
-    </div>
+    <RefWrapper>
+      <div
+        className={cn(
+          "group relative aspect-square w-full rounded-lg border-2 flex flex-col items-center justify-center transition-all scale-95",
+          currentRarityStyles
+            ? `${currentRarityStyles?.bg} ${currentRarityStyles.border} hover:scale-100 hover:brightness-200 hover:shadow-lg`
+            : "brightness-50"
+        )}
+        style={{ opacity }}
+      >
+        {children}
+      </div>
+    </RefWrapper>
   );
 };
 

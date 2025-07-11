@@ -4,7 +4,7 @@ import {
   UseConsumableItem,
   MerchantTransaction,
 } from "@/api/types";
-import { FC, Ref, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { CharacterEquipmentFields } from "@/api/enums";
 import {
   useCharacterManagementContext,
@@ -22,11 +22,12 @@ import { ItemsPagination } from "./items-pagination";
 import { usePagination } from "@/hooks/usePagination";
 import { cn } from "@/lib/utils";
 import { EmptyItemDisplay } from "@/components/items/item-display";
+import { ConnectDropTarget } from "react-dnd";
 
 type InventoryItemsProps = {
   items?: InventoryItemsType;
   //TODO: move this to conetxt probably;
-  dropRef: Ref<HTMLDivElement>;
+  dropRef: ConnectDropTarget;
   className?: string;
 };
 const PAGE_SIZE = 35;
@@ -114,32 +115,34 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
   return (
     <div className="relative rounded-lg bg-gray-800/60 h-full flex flex-col overflow-hidden justify-between">
       <ScrollArea className="flex-grow min-h-[calc(100dvh-20rem)] ">
-        <div className={cn(className)} ref={dropRef}>
-          <div
-            className={`grid grid-cols-6 xs:grid-cols-5 sm:grid-cols-7 md:grid-cols-10 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 pr-2`}
-          >
-            {paginatedItems.map(([_, item]) => (
-              <div key={item.id}>
-                <InventoryItem
-                  inventoryItem={item}
-                  onItemEquip={(characterId, itemId, slot) =>
-                    handleOnItemEquip(characterId, itemId, slot)
-                  }
-                  onItemConsume={(itemId) => handleOnItemConsume(itemId)}
-                  onMercenaryWear={(characterId, itemId) =>
-                    handleOnMercenaryWear(characterId, itemId)
-                  }
-                  onItemSell={handleOnSellItem}
-                />
-              </div>
-            ))}
-            {Array.from({
-              length: Math.max(0, PAGE_SIZE - paginatedItems.length),
-            }).map((_, i) => (
-              <EmptyItemDisplay key={`empty-inv-${i}`} />
-            ))}
+        {dropRef(
+          <div className={cn(className)}>
+            <div
+              className={`grid grid-cols-6 xs:grid-cols-5 sm:grid-cols-7 md:grid-cols-10 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 pr-2`}
+            >
+              {paginatedItems.map(([_, item]) => (
+                <div key={item.id}>
+                  <InventoryItem
+                    inventoryItem={item}
+                    onItemEquip={(characterId, itemId, slot) =>
+                      handleOnItemEquip(characterId, itemId, slot)
+                    }
+                    onItemConsume={(itemId) => handleOnItemConsume(itemId)}
+                    onMercenaryWear={(characterId, itemId) =>
+                      handleOnMercenaryWear(characterId, itemId)
+                    }
+                    onItemSell={handleOnSellItem}
+                  />
+                </div>
+              ))}
+              {Array.from({
+                length: Math.max(0, PAGE_SIZE - paginatedItems.length),
+              }).map((_, i) => (
+                <EmptyItemDisplay key={`empty-inv-${i}`} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </ScrollArea>
       <div className="w-full bg-gray-800/90 h-12 p-1 border border-gray-700">
         <ItemsPagination

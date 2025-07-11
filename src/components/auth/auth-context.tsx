@@ -28,8 +28,13 @@ type AuthContextType = {
   user: ProfileUser;
   heroDetails: ProfileHeroDetails;
   updateHeroDetails: (update: Partial<ProfileHeroDetails>) => void;
-  updateUserDetails: (update: Partial<ProfileUser>) => void;
+  updateUserDetails: (opts: UpdateUserDetailsOpts) => void;
   fetchProfile: () => Promise<ApiResponseBody<ProfileResponseType> | null>;
+};
+
+export type UpdateUserDetailsOpts = {
+  type: "incGold" | "decGold";
+  value: number;
 };
 
 type AuthContextProps = {
@@ -79,10 +84,22 @@ export const AuthContextProvider: FC<AuthContextProps> = ({ children }) => {
   const updateHeroDetails = (update: Partial<ProfileHeroDetails>) => {
     setHeroDetails((prevState) => prevState && { ...prevState, ...update });
   };
-  const updateUserDetails = (update: Partial<ProfileUser>) => {
-    setUser((prevState) => ({ ...prevState, ...update }));
+  const updateUserDetails = (opts: UpdateUserDetailsOpts) => {
+    switch (opts.type) {
+      case "incGold":
+        setUser((prevState) => ({
+          ...prevState,
+          gold: prevState.gold + opts.value,
+        }));
+        break;
+      case "decGold":
+        setUser((prevState) => ({
+          ...prevState,
+          gold: prevState.gold - opts.value,
+        }));
+        break;
+    }
   };
-
   useEffect(() => {
     isLoggedIn ? fetchProfile() : clearCache();
   }, [clearCache, fetchProfile, isLoggedIn]);

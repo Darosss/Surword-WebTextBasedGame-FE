@@ -1,8 +1,7 @@
 "use client";
 
-import { InventoryItemType, ItemsCostType } from "@/api/types";
+import { MerchantTransaction } from "@/api/types";
 import React, { FC, useMemo, useState } from "react";
-import { filterItemsEntries, getSortedItems } from "@/components/items";
 import type { FilterType, SortType } from "@/components/items";
 import { MerchantItem } from "./merchant-item";
 import { fetchBackendApi } from "@/api/fetch";
@@ -24,9 +23,10 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Coins } from "lucide-react";
 import { ItemsHeaderFilter } from "@/components/items/items-header-filter";
 import { ItemsSidebarFilter } from "@/components/items/items-sidebar-filter";
-
-const findCostForItem = (itemsCost: ItemsCostType, itemId: string) =>
-  Object.entries(itemsCost).find(([id]) => id === itemId);
+import {
+  filterMerchantItemsEntries,
+  getSortedMerchantItems,
+} from "@/components/items/utils";
 
 export const Merchant: FC = () => {
   const [{ canDrop, isOver }, drop] = useDrop<
@@ -49,7 +49,7 @@ export const Merchant: FC = () => {
     ["any"]
   );
 
-  const { manageMerchantItems, items, commodityRefreshAt, itemsCost } =
+  const { manageMerchantItems, items, commodityRefreshAt } =
     useMerchantContext();
 
   const {
@@ -68,23 +68,27 @@ export const Merchant: FC = () => {
   });
 
   const itemsToRender = useMemo(
-    () => getSortedItems(filterItemsEntries(items || {}, filter), sort),
+    () =>
+      getSortedMerchantItems(
+        filterMerchantItemsEntries(items || {}, filter),
+        sort
+      ),
     [filter, sort, items]
   );
 
   const handleOnBuyItem = (id: string, cost: number) => {
     if (gold < cost) return toast.error("You do not have enough gold");
-    fetchBackendApi<InventoryItemType>({
+    fetchBackendApi<MerchantTransaction>({
       url: `merchants/buy-item/${id}`,
       method: "POST",
       notification: { pendingText: "Trying to buy item" },
     }).then((response) => {
       const responseData = response.body.data;
       if (responseData) {
-        manageMerchantItems({ type: "buy", id: responseData.id });
+        manageMerchantItems({ type: "buy", id: responseData.item.id });
 
-        manageInventoryItems({ type: "add", item: responseData });
-        updateUserDetails({ gold: gold - responseData.value });
+        manageInventoryItems({ type: "add", item: responseData.item });
+        updateUserDetails({ type: "decGold", value: responseData.cost });
       }
     });
   };
@@ -112,18 +116,15 @@ export const Merchant: FC = () => {
         <ScrollBar />
         <div
           className={`max-h-[calc(100dvh-10rem)] grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 pr-2
-               ${isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""}
-         `}
+              ${isActive ? dndStyles.active : canDrop ? dndStyles.canDrop : ""}
+        `}
           ref={drop}
         >
           {itemsToRender?.map((value) => {
-            const itemCost =
-              findCostForItem(itemsCost || {}, value[0])?.[1] || -1;
-
             return (
               <MerchantItem
                 key={value[0]}
-                itemData={{ item: value[1], cost: itemCost }}
+                itemData={value[1]}
                 onItemBuy={handleOnBuyItem}
                 currentGold={gold}
               />

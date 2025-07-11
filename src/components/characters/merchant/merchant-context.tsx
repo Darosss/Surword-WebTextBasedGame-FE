@@ -1,7 +1,7 @@
 "use client";
 import { FC, createContext, useContext, useEffect, useState } from "react";
 import { useFetch } from "@/hooks/useFetch";
-import { InventoryItemType, YourMerchantResponseData } from "@/api/types";
+import { MerchantItemType, YourMerchantResponseData } from "@/api/types";
 
 type ManageMerchantItemsRemove = {
   id: string;
@@ -10,7 +10,7 @@ type ManageMerchantItemsRemove = {
 
 type ManageMerchantItemsAdd = {
   type: "sell";
-  item: InventoryItemType;
+  item: MerchantItemType;
 };
 
 type ManageMerchantItems = ManageMerchantItemsRemove | ManageMerchantItemsAdd;
@@ -18,7 +18,6 @@ type ManageMerchantItems = ManageMerchantItemsRemove | ManageMerchantItemsAdd;
 type MerchantContextType = {
   commodityRefreshAt: YourMerchantResponseData["commodityRefreshAt"];
   items: YourMerchantResponseData["items"];
-  itemsCost: YourMerchantResponseData["itemsCost"];
   manageMerchantItems: (data: ManageMerchantItems) => void;
   refetchMerchantItems: () => void;
 };
@@ -33,9 +32,7 @@ export const MerchantContextProvider: FC<MerchantContextProps> = ({
   children,
 }) => {
   const [items, setItems] = useState<MerchantContextType["items"]>({});
-  const [itemsCost, setItemsCost] = useState<MerchantContextType["itemsCost"]>(
-    {}
-  );
+
   const [commodityRefreshAt, setCommodityRefreshAt] = useState<
     MerchantContextType["commodityRefreshAt"]
   >(new Date().toLocaleDateString());
@@ -60,21 +57,14 @@ export const MerchantContextProvider: FC<MerchantContextProps> = ({
     });
   };
 
-  const addNewItem = (item: InventoryItemType) => {
+  const addNewItem = (data: MerchantItemType) => {
     if (!items) return;
-    const { id } = item;
 
     setItems((prevState) => {
-      prevState[id] = item;
+      prevState[data.item.id] = data;
 
       return { ...prevState };
     });
-
-    if (!itemsCost[id])
-      setItemsCost((prevState) => ({
-        ...prevState,
-        [id]: item.value,
-      }));
   };
 
   const manageMerchantItems = (data: ManageMerchantItems) => {
@@ -92,11 +82,10 @@ export const MerchantContextProvider: FC<MerchantContextProps> = ({
       const responseData = response?.data;
       if (!responseData) return;
 
-      const { commodityRefreshAt, items, itemsCost } = responseData;
+      const { commodityRefreshAt, items } = responseData;
 
       setItems(items);
       setCommodityRefreshAt(commodityRefreshAt);
-      setItemsCost(itemsCost);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -106,7 +95,6 @@ export const MerchantContextProvider: FC<MerchantContextProps> = ({
       value={{
         commodityRefreshAt,
         items,
-        itemsCost,
         manageMerchantItems,
         refetchMerchantItems: fetchMerchantData,
       }}

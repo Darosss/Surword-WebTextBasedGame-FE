@@ -187,9 +187,16 @@ export type Inventory = CommonFieldTypes & {
 
 export type InventoryItemType = ItemWearable | ItemConsumable | ItemMercenary;
 
-export type InventoryItems = {
-  [id: string]: InventoryItemType;
+export type MerchantItemType = {
+  item: InventoryItemType;
+  cost: number;
 };
+
+export type MerchantTransaction = MerchantItemType;
+
+export type InventoryItems = Record<string, InventoryItemType>;
+
+export type MerchantItems = Record<string, MerchantItemType>;
 
 export type EquipResponseType = InventoryItemType;
 
@@ -199,18 +206,13 @@ export type UseConsumableItem = {
   newHealth?: number;
 };
 
-export type ItemsCostType = {
-  [id: string]: number;
-};
-
 export type SellItemResponseType = InventoryItemType;
 export type BuyItemResponseType = InventoryItemType;
 
 export type YourMerchantResponseData = {
   commodityRefreshAt: string;
   id: string;
-  items: InventoryItems;
-  itemsCost: ItemsCostType;
+  items: MerchantItems;
 };
 
 export type LeaderboardsData = {

@@ -1,4 +1,4 @@
-import { InventoryItemType } from "@/api/types";
+import { MerchantItemType } from "@/api/types";
 import { DragSourceMonitor, useDrag } from "react-dnd";
 import {
   DragBaseCollectedProps,
@@ -10,13 +10,8 @@ import { allowDropToPrefixes } from "../dndHelpers";
 import { PossibleDropResultActions } from "../equipment";
 import { FC } from "react";
 
-type MerchantItemData = {
-  item: InventoryItemType;
-  cost: number;
-};
-
 type MerchantItemsProps = {
-  itemData: MerchantItemData;
+  itemData: MerchantItemType;
   onItemBuy: (id: string, cost: number) => void;
   currentGold: number;
 };

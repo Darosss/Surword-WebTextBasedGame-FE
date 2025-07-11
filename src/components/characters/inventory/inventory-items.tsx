@@ -2,7 +2,7 @@ import {
   InventoryItems as InventoryItemsType,
   EquipResponseType,
   UseConsumableItem,
-  SellItemResponseType,
+  MerchantTransaction,
 } from "@/api/types";
 import { FC, Ref, useMemo } from "react";
 import { CharacterEquipmentFields } from "@/api/enums";
@@ -35,11 +35,7 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
   dropRef,
   className,
 }) => {
-  const {
-    updateHeroDetails,
-    updateUserDetails,
-    user: { gold },
-  } = useAuthContext();
+  const { updateHeroDetails, updateUserDetails } = useAuthContext();
 
   const { filter, sort } = useInventoryControlContext();
   const { setCurrentCharacterId, updateCharacter } =
@@ -102,17 +98,16 @@ export const InventoryItems: FC<InventoryItemsProps> = ({
   };
 
   const handleOnSellItem = (id: string) => {
-    fetchBackendApi<SellItemResponseType>({
+    fetchBackendApi<MerchantTransaction>({
       url: `merchants/sell-item/${id}`,
       method: "POST",
       notification: { pendingText: "Trying to sell item" },
     }).then((response) => {
       const responseData = response.body.data;
-
       if (responseData) {
         manageInventoryItems({ type: "remove", id });
         manageMerchantItems({ type: "sell", item: responseData });
-        updateUserDetails({ gold: gold + responseData.value });
+        updateUserDetails({ type: "incGold", value: responseData.cost });
       }
     });
   };

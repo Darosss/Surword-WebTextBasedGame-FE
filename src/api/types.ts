@@ -226,3 +226,43 @@ export type LeaderboardsResponse = CommonFieldTypes & {
   category: LeaderboardsCategories;
   data: LeaderboardsData[];
 };
+
+export type ConfigsResponseType = {
+  skirmishConfig: {
+    challengeCooldownMS: number;
+    dungeonCooldownMS: number;
+  };
+  lootConfig: {
+    raritiesBonusMultipliers: {
+      baseFactor: number;
+      rarityBonuses: Record<ItemRarity, number>;
+    };
+    itemChanceBonusMultiplier: number;
+  };
+  xpConfig: {
+    basePerLevelXp: number;
+    scalingFactorXp: number;
+    factorBaseXp: number;
+    factorExponentXp: number;
+    enemyDefeatBaseXp: number;
+    enemyDefeatFactorBaseXp: number;
+    enemyDefeatFactorExponentXp: number;
+    enemyDefeatSurvivedAdjustXp: number;
+  };
+  goldConfig: {
+    baseGoldPerEnemyLevel: number;
+    enemyDefeatSurvivedAdjustGold: number;
+  };
+  merchantConfig: {
+    commodityRefreshMS: number;
+    buyCostValueMultiplier: number;
+    sellCostValueMultiplier: number;
+  };
+  systemConfig: {
+    leaderboardRefreshCooldownMs: number;
+    mercenaryCharacterLimits: Array<{
+      requiredLevel: number;
+      charactersLimit: number;
+    }>;
+  };
+};

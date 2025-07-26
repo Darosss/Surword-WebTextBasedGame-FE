@@ -90,7 +90,7 @@ export const ItemDisplay: FC<ItemDisplayProps> = ({
                 </div>
               ) : null}
               <Image
-                className="rounded-[inherit]"
+                className="rounded-[inherit] object-contain"
                 src={`/images/items/${item.type.toLowerCase()}/${item.subtype.toLowerCase()}.png`}
                 sizes="(max-width: 768px) 50px, 100px"
                 alt="item"

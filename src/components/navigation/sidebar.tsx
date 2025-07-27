@@ -1,16 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { FC, type JSX } from "react";
-import {
-  X,
-  Swords,
-  Shield,
-  Users,
-  LogOut,
-  LogIn,
-  UserPlus,
-} from "lucide-react";
+import { FC } from "react";
+import { X } from "lucide-react";
 import { COOKIE_TOKEN_NAME } from "@/api/fetch";
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
@@ -19,14 +11,7 @@ import { Button } from "@/components/ui/button";
 import Logo from "./Logo";
 import { cn } from "@/lib/utils";
 import { UserDetails } from "../user";
-
-type LinksType = {
-  href: string;
-  label: string;
-  icon: JSX.Element;
-  isButton?: boolean;
-  action?: () => void;
-};
+import { loggedInLinks, loggedOutLinks } from "./links-list";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -44,56 +29,8 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen, onClose }) => {
     setIsLoggedIn(false);
     router.replace("/auth/login");
   };
-  const commonLinks: LinksType[] = [
-    {
-      href: "/overview",
-      label: "Overview",
-      icon: <Shield className="h-5 w-5" />,
-    },
-    {
-      href: "/skirmishes",
-      label: "Skirmishes",
-      icon: <Swords className="h-5 w-5" />,
-    },
-    {
-      href: "/dungeons",
-      label: "Dungeons",
-      icon: <Shield className="h-5 w-5" />,
-    },
-    {
-      href: "/leaderboards",
-      label: "Leaderboards",
-      icon: <Users className="h-5 w-5" />,
-    },
-  ];
 
-  const loggedInLinks: LinksType[] = [
-    ...commonLinks,
-    {
-      href: "#",
-      label: "Logout",
-      icon: <LogOut className="h-5 w-5" />,
-      action: handleOnLogout,
-      isButton: true,
-    },
-  ];
-
-  const loggedOutLinks: LinksType[] = [
-    {
-      href: "/auth/login",
-      label: "Login",
-      icon: <LogIn className="h-5 w-5" />,
-      isButton: true,
-    },
-    {
-      href: "/auth/register",
-      label: "Register",
-      icon: <UserPlus className="h-5 w-5" />,
-      isButton: true,
-    },
-  ];
-
-  const navLinks = isLoggedIn ? loggedInLinks : loggedOutLinks;
+  const navLinks = isLoggedIn ? loggedInLinks(handleOnLogout) : loggedOutLinks;
 
   return (
     <>

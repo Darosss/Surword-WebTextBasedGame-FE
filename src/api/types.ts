@@ -35,6 +35,11 @@ export type Character = CommonFieldTypes & {
   stats: HeroStats;
 };
 
+export type CharactersIdsResponseType = {
+  mainCharacter: string;
+  mercenaries: string[];
+};
+
 export type MainCharacter = Character & {
   expToLevelUp: number;
   experience: number;

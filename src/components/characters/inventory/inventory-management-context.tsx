@@ -111,10 +111,10 @@ export const InventoryManagementContextProvider: FC<
     });
   }, [fetchInventoryData]);
 
-  if (isPending === null || error || !responseData.data) {
+  if (error || !responseData.data) {
     return (
       <FetchingInfo
-        isPending={isPending}
+        isPending={false}
         error={error}
         refetch={fetchInventoryData}
       />
@@ -124,7 +124,7 @@ export const InventoryManagementContextProvider: FC<
   return (
     <InventoryManagementContext.Provider
       value={{
-        items,
+        items: items || {},
         maxItems,
         maxWeight,
         currentWeight,

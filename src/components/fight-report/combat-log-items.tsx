@@ -79,6 +79,9 @@ type LineWrapperProps = {
   content: React.ReactNode;
   asEnd?: boolean;
 };
+
+//TODO: note -> this defenderName + attackerNames should be fixed later? idk
+
 const LineWrapper: FC<LineWrapperProps> = ({ iconContent, content, asEnd }) => {
   return (
     <div
@@ -96,22 +99,29 @@ const LineWrapper: FC<LineWrapperProps> = ({ iconContent, content, asEnd }) => {
   );
 };
 
-type TurnActionsLineOptions = {
-  isParry?: boolean;
-};
-
 type TurnActionsLineProps = {
   attack: ReportTurnActionMoveAttack;
   defend: ReportTurnActionMoveDefend;
+  attackerName: string;
+  defenderName: string;
 };
 
-const TurnActionsLine: FC<TurnActionsLineProps> = ({ attack, defend }) => {
+const TurnActionsLine: FC<TurnActionsLineProps> = ({
+  attack,
+  defend,
+  attackerName,
+  defenderName,
+}) => {
   return (
     <>
       <div className="flex-grow flex">
-        <AttackItem attack={attack} defenderName={defend.name} />
+        <AttackItem
+          attack={attack}
+          defenderName={defenderName}
+          attackerName={attackerName}
+        />
         {"|"}
-        <DefendItem defend={defend} />
+        <DefendItem defend={defend} defenderName={defenderName} />
 
         <ResultItem attack={attack} defend={defend} />
       </div>
@@ -139,11 +149,13 @@ type CombatTurnActionProps = {
   action: ReportTurnAction;
   lastTurn: boolean;
   lastActionInTurn: boolean;
+  charsMap: Map<string, string>;
 };
 export const CombatTurnAction: FC<CombatTurnActionProps> = ({
   action,
   lastTurn,
   lastActionInTurn,
+  charsMap,
 }) => {
   const { basicAttack, doubledAttack } = action;
 
@@ -153,13 +165,13 @@ export const CombatTurnAction: FC<CombatTurnActionProps> = ({
   const dbleParryDefend = doubledAttack?.defend.parryAttack?.basicAttack.defend;
 
   // if basic attack killed defender
-  const defenderDefeated = basicD.health === 0 && basicD.name;
+  const defenderDefeated = basicD.health === 0 && charsMap.get(basicD.id);
   //if atacker got parried by defender and killed either by his basic or doubled attack
   const attackerDefeated =
     basicParryDefend?.health === 0
-      ? basicParryDefend.name
+      ? charsMap.get(basicParryDefend.id)
       : dbleParryDefend?.health === 0
-      ? dbleParryDefend?.name
+      ? charsMap.get(dbleParryDefend?.id)
       : "";
   const actionIcon = <Sword className="w-5 h-5" />;
 
@@ -175,12 +187,25 @@ export const CombatTurnAction: FC<CombatTurnActionProps> = ({
               </span>
             )}
 
-            <TurnActionsLine attack={basicA} defend={basicD} />
+            <TurnActionsLine
+              attack={basicA}
+              defend={basicD}
+              defenderName={charsMap.get(basicD.id) || basicD.id}
+              attackerName={charsMap.get(basicA.id) || basicA.id}
+            />
 
             {basicD.parryAttack ? (
               <ParryItem
                 attack={basicD.parryAttack.basicAttack.attack}
                 defend={basicD.parryAttack.basicAttack.defend}
+                defenderName={
+                  charsMap.get(basicD.parryAttack.basicAttack.defend.id) ||
+                  basicD.parryAttack.basicAttack.defend.id
+                }
+                attackerName={
+                  charsMap.get(basicD.parryAttack.basicAttack.attack.id) ||
+                  basicD.parryAttack.basicAttack.attack.id
+                }
               />
             ) : null}
 
@@ -189,6 +214,14 @@ export const CombatTurnAction: FC<CombatTurnActionProps> = ({
                 <TurnActionsLine
                   attack={doubledAttack.attack}
                   defend={doubledAttack.defend}
+                  defenderName={
+                    charsMap.get(doubledAttack.defend.id) ||
+                    doubledAttack.defend.id
+                  }
+                  attackerName={
+                    charsMap.get(doubledAttack.attack.id) ||
+                    doubledAttack.attack.id
+                  }
                 />
               </div>
             ) : null}
@@ -209,15 +242,20 @@ export const CombatTurnAction: FC<CombatTurnActionProps> = ({
 
 type AttackItemProps = {
   attack: ReportTurnActionMoveAttack;
-  defenderName: ReportTurnActionMoveDefend["name"];
+  attackerName: string;
+  defenderName: string;
 };
-const AttackItem: FC<AttackItemProps> = ({ attack, defenderName }) => {
+const AttackItem: FC<AttackItemProps> = ({
+  attack,
+  attackerName,
+  defenderName,
+}) => {
   const currentAttStyles =
     attackStyles[attack.baseValues.attackStrength.attackStrength];
 
   return (
     <>
-      <span className="font-semibold text-blue-500 mr-1">{attack.name} </span>
+      <span className="font-semibold text-blue-500 mr-1">{attackerName} </span>
       attacks{" "}
       <span className={cn(currentAttStyles?.text)}>
         ({currentAttStyles?.label}
@@ -230,12 +268,13 @@ const AttackItem: FC<AttackItemProps> = ({ attack, defenderName }) => {
 
 type DefendItemProps = {
   defend: ReportTurnActionMoveDefend;
+  defenderName: string;
 };
-const DefendItem: FC<DefendItemProps> = ({ defend }) => {
+const DefendItem: FC<DefendItemProps> = ({ defend, defenderName }) => {
   const basicDStyles = defendStyles[defend.defendType]!;
   return (
     <>
-      <span className="font-semibold text-red-500 mx-1">{defend.name} </span>(
+      <span className="font-semibold text-red-500 mx-1">{defenderName} </span>(
       {defend.health} HP)
       <span className={cn("ml-1", basicDStyles.text)}>
         {basicDStyles?.label}
@@ -265,8 +304,15 @@ const ResultItem: FC<ResultItemProps> = ({ attack, defend }) => {
 type ParryItemProps = {
   attack: ReportTurnActionMoveAttack;
   defend: ReportTurnActionMoveDefend;
+  attackerName: string;
+  defenderName: string;
 };
-const ParryItem: FC<ParryItemProps> = ({ attack, defend }) => {
+const ParryItem: FC<ParryItemProps> = ({
+  attack,
+  defend,
+  attackerName,
+  defenderName,
+}) => {
   return (
     <>
       <span
@@ -278,7 +324,12 @@ const ParryItem: FC<ParryItemProps> = ({ attack, defend }) => {
         {defendStyles["PAIRED"]?.label} parry
       </span>
       <div className="flex-grow flex">
-        <TurnActionsLine attack={attack} defend={defend} />
+        <TurnActionsLine
+          attack={attack}
+          defend={defend}
+          defenderName={defenderName}
+          attackerName={attackerName}
+        />
       </div>{" "}
     </>
   );

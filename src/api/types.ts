@@ -111,13 +111,13 @@ export type ReportTurnActionMoveAttack = {
     value: number;
   };
   debuffs: any;
-  name: string;
+  id: string;
   withDoubledAttack: boolean;
 };
 export type ReportTurnActionMoveDefend = {
   defendType: "DODGED" | "BLOCKED" | "PAIRED" | "NULL";
   health: number;
-  name: string;
+  id: string;
   receivedDamage: number;
   parryAttack: ReportTurnAction | null;
 };

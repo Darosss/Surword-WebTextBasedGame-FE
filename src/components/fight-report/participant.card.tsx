@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { Character, NpcEnemy } from "@/api/types";
+import { motion } from "framer-motion";
 
 interface ParticipantCardProps {
   participant: Character | NpcEnemy;
@@ -25,7 +26,9 @@ export default function ParticipantCard({
   const isDefeated = participant.health <= 0;
 
   return (
-    <div
+    <motion.div
+      initial={{ filter: "brightness(2)" }}
+      animate={{ filter: "brightness(1)" }}
       className={cn(
         "rounded-lg p-3 sm:p-4 border-2 bg-gray-800/60 flex flex-col items-center text-center shadow-lg relative overflow-hidden",
         team === 1 ? "border-blue-600/70" : "border-red-600/70",
@@ -56,6 +59,6 @@ export default function ParticipantCard({
         value={hpPercentage}
         className={cn("h-2 sm:h-2.5 w-full bg-gray-700", hpColor)}
       />
-    </div>
+    </motion.div>
   );
 }

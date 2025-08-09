@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import { FightReportType } from "@/api/types";
+import React, { FC, useState } from "react";
+import { Character, FightReportType, NpcEnemy } from "@/api/types";
 
 import {
   Accordion,
@@ -12,6 +12,13 @@ import { CombatTurnActions } from "./combat-turn-actions";
 import { PartyCarousel } from "./party-carousel";
 import { ResultsAndRewards } from "./results-and-rewards";
 import { FightOverview } from "./fight-overview";
+
+enum PossibleAccordionTabs {
+  PARTICIPANTS = "participants",
+  COMBAT_LOG = "combat-log",
+  RESULTS = "results",
+  OVERVIEW = "overview",
+}
 
 type FightReportDisplayProps = {
   report: FightReportType;
@@ -27,8 +34,41 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
     status,
     turnsReports,
   } = report;
-
   const fightTitle = "Fight!";
+  const [charsMap] = useState(
+    new Map([...characters, ...enemies].map((char) => [char.id, char.name]))
+  );
+
+  const [enemyChars] = useState<Map<string, NpcEnemy>>(
+    new Map(
+      enemies.map((character) => {
+        return [
+          character.id,
+          {
+            ...character,
+            health:
+              character.stats.additionalStatistics["MAX_HEALTH"]
+                .effectiveValue || character.health,
+          },
+        ];
+      })
+    )
+  );
+  const [playerChars] = useState<Map<string, Character>>(
+    new Map(
+      characters.map((character) => {
+        return [
+          character.id,
+          {
+            ...character,
+            health:
+              character.stats.additionalStatistics["MAX_HEALTH"]
+                .effectiveValue || character.health,
+          },
+        ];
+      })
+    )
+  );
 
   return (
     <div className="p-3 sm:p-4 md:p-6 mx-auto bg-gray-900/80 backdrop-blur-lg rounded-xl border border-gray-700/60 shadow-2xl">
@@ -40,11 +80,15 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
 
       <Accordion
         type="multiple"
-        defaultValue={["participants", "combat-log", "results"]}
+        defaultValue={[
+          PossibleAccordionTabs.RESULTS,
+          PossibleAccordionTabs.PARTICIPANTS,
+          PossibleAccordionTabs.COMBAT_LOG,
+        ]}
         className="w-full space-y-3"
       >
         <AccordionItem
-          value="results"
+          value={PossibleAccordionTabs.RESULTS}
           className="border border-gray-700/70 rounded-lg overflow-hidden bg-gray-800/30"
         >
           <AccordionTrigger className="text-md sm:text-lg font-semibold text-gray-200 hover:no-underline hover:bg-gray-700/40 px-4 py-3 w-full hover:cursor-pointer">
@@ -63,7 +107,7 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem
-          value="participants"
+          value={PossibleAccordionTabs.PARTICIPANTS}
           className="border border-gray-700/70 rounded-lg overflow-hidden bg-gray-800/30"
         >
           <AccordionTrigger className="text-md sm:text-lg font-semibold text-gray-200 hover:no-underline hover:bg-gray-700/40 px-4 py-3 w-full hover:cursor-pointer">
@@ -75,14 +119,14 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
           <AccordionContent className="bg-gray-800/20 p-4 text-sm border-t border-gray-700/50">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
               <PartyCarousel
-                participants={characters}
+                participants={playerChars}
                 partyName="Player Party"
                 icon={Users}
                 iconColor="text-blue-400"
                 team={1}
               />
               <PartyCarousel
-                participants={enemies}
+                participants={enemyChars}
                 partyName="Enemy Forces"
                 icon={Shield}
                 iconColor="text-red-400"
@@ -92,7 +136,7 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem
-          value="overview"
+          value={PossibleAccordionTabs.OVERVIEW}
           className="border border-gray-700/70 rounded-lg overflow-hidden bg-gray-800/30"
         >
           <AccordionTrigger className="text-md sm:text-lg font-semibold text-gray-200 hover:no-underline hover:bg-gray-700/40 px-4 py-3 w-full hover:cursor-pointer">
@@ -109,7 +153,7 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem
-          value="combat-log"
+          value={PossibleAccordionTabs.COMBAT_LOG}
           className="border border-gray-700/70 rounded-lg overflow-hidden bg-gray-800/30"
         >
           <AccordionTrigger className="text-md sm:text-lg font-semibold text-gray-200 hover:no-underline hover:bg-gray-700/40 px-4 py-3 w-full hover:cursor-pointer">
@@ -123,8 +167,11 @@ export const FightReportDisplay: FC<FightReportDisplayProps> = ({ report }) => {
               {turnsReports.length > 0 ? (
                 turnsReports.map((entry, index) => (
                   <CombatTurnActions
-                    key={entry.turnNumber + index}
-                    entry={entry}
+                    key={"turn_" + entry.turnNumber + "_" + index}
+                    turnNumber={entry.turnNumber}
+                    endOfFight={entry.endOfFight}
+                    actions={entry.actions}
+                    charsMap={charsMap}
                   />
                 ))
               ) : (

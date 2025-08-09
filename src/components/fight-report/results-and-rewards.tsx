@@ -65,7 +65,10 @@ export const ResultsAndRewards: FC<ResultsAndRewardsProps> = ({
             </h4>
             <div className={cn("flex justify-center")}>
               {loot.map((item) => (
-                <div key={item.id} className="w-20 h-20">
+                <div
+                  key={item.id || item.level + "_" + item.weight}
+                  className="w-20 h-20"
+                >
                   <ItemDisplay item={item} />
                 </div>
               ))}

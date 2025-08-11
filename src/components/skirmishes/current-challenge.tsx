@@ -1,12 +1,12 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { ChallengeData, ChoosenChallange } from "./types";
 import { formatTime } from "@/utils/utils";
 import { useFetch } from "@/hooks/useFetch";
 import { Button } from "@/components/ui/button";
 import { FightReportType } from "@/api/types";
-import { FightReportDisplay } from "@/components/fight-report";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 import { useAuthContext } from "@/components/auth";
+import { FightReport } from "../fight-report/fight-report";
 
 type CurrentChallengeProps = {
   chosenChallenge: ChoosenChallange;
@@ -24,7 +24,6 @@ export const CurrentChallenge: FC<CurrentChallengeProps> = ({
   onConfirmReport,
   onCancel,
 }) => {
-  const [showReport, setShowReport] = useState(false);
   const {
     api: {
       isPending,
@@ -49,31 +48,16 @@ export const CurrentChallenge: FC<CurrentChallengeProps> = ({
     if (remainingTime === 0) fetchData();
   }, [fetchData, remainingTime]);
 
-  useEffect(() => {
-    if (data) {
-      setShowReport(true);
-    }
-  }, [data]);
-
   return (
     <div>
-      {data && showReport ? (
-        <div className="bg-transparent backdrop-blur-md absolute top-0 bottom-0 left-0 right-0 z-[100]">
-          <div className="sticky top-0 z-[101]">
-            <Button
-              onClick={() => {
-                onConfirmReport();
-                fetchProfile();
-                setShowReport(false);
-              }}
-              variant="success"
-              className="w-full "
-            >
-              Confirm
-            </Button>
-          </div>
-          <FightReportDisplay report={data} />
-        </div>
+      {data ? (
+        <FightReport
+          report={data}
+          onClickConfirm={() => {
+            onConfirmReport();
+            fetchProfile();
+          }}
+        />
       ) : (
         <div>
           <div>

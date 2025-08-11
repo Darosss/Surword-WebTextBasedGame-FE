@@ -6,15 +6,14 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { CompletedDungeons } from "./types";
 import React from "react";
 import { useFetch } from "@/hooks/useFetch";
 import { FightReportType } from "@/api/types";
 import { DungeonActions } from "./dungeon-actions";
-import { FightReportDisplay } from "../fight-report";
-import { Button } from "../ui/button";
 import { useAuthContext } from "../auth";
+import { FightReport } from "../fight-report/fight-report";
 
 type PartyCarouselProps = {
   currentLevel: number;
@@ -34,7 +33,6 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
   onConfirmReport,
   currentLevel,
 }) => {
-  const [showReport, setShowReport] = useState(false);
   const {
     api: {
       responseData: { data: fightData },
@@ -51,12 +49,6 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
 
   const { fetchProfile } = useAuthContext();
 
-  useEffect(() => {
-    if (!fightData) setShowReport(false);
-
-    setShowReport(true);
-  }, [fightData]);
-
   const handleStartAFight = (level: number) => {
     startAFight({ customUrl: `dungeons/start-a-fight/${level}` });
   };
@@ -68,23 +60,14 @@ export const DungeonsCarousel: FC<PartyCarouselProps> = ({
         "relative p-3 sm:p-4 sm:pt-0 rounded-lg bg-gray-800/50 border overflow-y-auto min-h-[calc(100vh-10rem)] flex flex-col justify-center"
       )}
     >
-      {fightData && showReport ? (
-        <div className="bg-transparent backdrop-blur-md absolute top-0 bottom-0 left-0 right-0 z-[100]">
-          <div className="sticky top-0 z-[101]">
-            <Button
-              onClick={() => {
-                onConfirmReport();
-                fetchProfile();
-                setShowReport(false);
-              }}
-              variant="success"
-              className="w-full "
-            >
-              Confirm
-            </Button>
-          </div>
-          <FightReportDisplay report={fightData} />
-        </div>
+      {fightData ? (
+        <FightReport
+          report={fightData}
+          onClickConfirm={() => {
+            onConfirmReport();
+            fetchProfile();
+          }}
+        />
       ) : null}
       <h2
         className={cn(

@@ -3,6 +3,7 @@ import {
   EnemyType,
   FightReportStatus,
   ItemType,
+  CharacterRace,
   LeaderboardsCategories,
 } from "./enums";
 
@@ -146,6 +147,7 @@ export type ItemConsumable = Item & {
 };
 export type ItemMercenary = Item & {
   type: ItemType.MERCENARY;
+  race: CharacterRace;
 };
 
 export type ItemRarity =

@@ -16,7 +16,6 @@ export function ItemHoverCardContentDisplay({
 }: ItemHoverCardContentDisplayProps) {
   const [isImageHovered, setIsImageHovered] = useState(false);
   const currentRarityStyle = rarityStyles[item.rarity];
-
   return (
     <div
       className={cn(
@@ -155,6 +154,14 @@ export function ItemHoverCardContentDisplay({
             {getFormattedName(item.rarity)}
           </span>
         </span>
+        {"race" in item && item.race && (
+          <span className="col-span-2">
+            Race:{" "}
+            <span className="font-medium text-gray-100">
+              {getFormattedName(item.race)}
+            </span>
+          </span>
+        )}
         {item.upgradePoints !== undefined && (
           <span>
             Upgrades:{" "}

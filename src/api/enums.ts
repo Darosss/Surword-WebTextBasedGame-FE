@@ -45,3 +45,11 @@ export enum LeaderboardsCategories {
   LEVELS = "LEVELS",
   DUNGEONS = "DUNGEONS",
 }
+
+export enum CharacterRace {
+  HUMAN = "HUMAN",
+  ELF = "ELF",
+  DWARF = "DWARF",
+  HALFLING = "HALFLING",
+  ORC = "ORC",
+}
